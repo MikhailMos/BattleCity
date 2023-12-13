@@ -18,11 +18,22 @@ set(RESOURCE_MANAGER
 	src/resources/ResourceManager.cpp
 )
 
+set(LOAD_IMAGE
+	src/resources/stb_image.h
+)
+
+set(TEXTURE_2D
+	src/renderer/Texture2D.h
+	src/renderer/Texture2D.cpp
+)
+
 # добавление файлов в проект
 add_executable(${PROJECT_NAME} 
 	src/main.cpp
 	${RENDERER}
+	${TEXTURE_2D}
 	${RESOURCE_MANAGER}
+	${LOAD_IMAGE}
 )
 
 # опции необходимые для GLFW
@@ -38,6 +49,10 @@ target_link_libraries(${PROJECT_NAME} glfw)
 # подключаем библиотеку Glad
 add_subdirectory(external/glad)
 target_link_libraries(${PROJECT_NAME} glad)
+
+# включаем возможность инклюдировать функции glm в нашем проекте
+include_directories(external/glm)
+
 
 # Чтоб исполняемый файл в месте с ресурсами лежал отедльно
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)
