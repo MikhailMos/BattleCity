@@ -27,11 +27,17 @@ set(TEXTURE_2D
 	src/renderer/Texture2D.cpp
 )
 
+set(SPRITE
+	src/renderer/Sprite.h
+	src/renderer/Sprite.cpp
+)
+
 # добавление файлов в проект
 add_executable(${PROJECT_NAME} 
 	src/main.cpp
 	${RENDERER}
 	${TEXTURE_2D}
+	${SPRITE}
 	${RESOURCE_MANAGER}
 	${LOAD_IMAGE}
 )

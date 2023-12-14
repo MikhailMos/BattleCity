@@ -9,6 +9,7 @@
 
 #include "renderer/Texture2D.h"
 #include "renderer/ShaderProgram.h"
+#include "renderer/Sprite.h"
 #include "resources/ResourceManager.h"
 
 
@@ -97,7 +98,20 @@ int main(int argc, char** argv)
             return -1;
         }
 
+        auto pSpriteShaderProgram = resourceManager.LoadShaders("SpriteShader", "resources/shaders/vSprite.txt", "resources/shaders/fSprite.txt");
+        if (!pSpriteShaderProgram)
+        {
+            std::cerr << "Can't creatre sprite shader program: " << "SpriteShader" << std::endl;
+            return -1;
+        }
+
         auto tex = resourceManager.LoadTexture("DefaultTexture", "resources/textures/map_16x16.png");
+
+        std::vector<std::string> subTexturesNames = {"block", "topBlock", "bottomBlock", "leftBlock", "rightBlock", "topLeftBlock", "topRigthBlock", "bottomLeftBlock", "bottomRightBlock", "beton"};
+        auto pTextureAtlas = resourceManager.LoadTextureAtlas("DefaultTextureAtlas", "resources/textures/map_16x16.png", std::move(subTexturesNames), 16, 16);
+
+        auto pSprite = resourceManager.LoadSprite("NewSprite", "DefaultTextureAtlas", "SpriteShader", 100, 100, "bottomLeftBlock");
+        pSprite->SetPosition(glm::vec2(300, 100));
 
         GLuint points_vbo = 0;
         glGenBuffers(1, &points_vbo);
@@ -143,7 +157,9 @@ int main(int argc, char** argv)
 
         pDefaultShaderProgram->SetMatrix4("projectionMat", projectionMatrix);
 
-
+        pSpriteShaderProgram->Use();
+        pSpriteShaderProgram->SetInt("tex", 0);
+        pSpriteShaderProgram->SetMatrix4("projectionMat", projectionMatrix);
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(pWindow))
@@ -160,6 +176,8 @@ int main(int argc, char** argv)
 
             pDefaultShaderProgram->SetMatrix4("modelMat", modelMatrix2);
             glDrawArrays(GL_TRIANGLES, 0, 3);
+
+            pSprite->Render();
 
             /* Swap front and back buffers */
             glfwSwapBuffers(pWindow);

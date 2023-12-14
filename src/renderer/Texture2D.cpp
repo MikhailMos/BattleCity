@@ -65,6 +65,34 @@ namespace Renderer {
 		glDeleteTextures(1, &m_ID_);
 	}
 
+	void Texture2D::AddSubTexture(std::string name, const glm::vec2& leftBottomUV, const glm::vec2& rightTopUV)
+	{
+		m_sub_textures_.emplace(std::move(name), SubTexture2D(leftBottomUV, rightTopUV));
+	}
+
+	const Texture2D::SubTexture2D& Texture2D::GetSubTexture(const std::string& name) const
+	{
+		auto it = m_sub_textures_.find(name);
+		if (it != m_sub_textures_.end()) 
+		{
+			return it->second;
+		}
+
+		const static SubTexture2D defaultSubTexture;
+
+		return defaultSubTexture;
+	}
+
+	unsigned int Texture2D::Width() const
+	{
+		return m_width_;
+	}
+
+	unsigned int Texture2D::Height() const
+	{
+		return m_height_;
+	}
+
 	void Texture2D::Bind() const
 	{
 		glBindTexture(GL_TEXTURE_2D, m_ID_);
