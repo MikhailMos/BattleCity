@@ -3,6 +3,7 @@
 #include "../renderer/ShaderProgram.h"
 #include "../renderer/Texture2D.h"
 #include "../renderer/Sprite.h"
+#include "../renderer/AnimatedSprite.h"
 
 #include <sstream>
 #include <fstream>
@@ -115,7 +116,12 @@ std::shared_ptr<Renderer::Sprite> ResourceManager::LoadSprite(const std::string&
 	}
 
 	std::shared_ptr<Renderer::Sprite> new_sprite = m_sprites_.emplace(spriteName, 
-																	  std::make_shared<Renderer::Sprite>(pTexture, subTextureName, pShader, glm::vec2(0.f, 0.f), glm::vec2(spriteWidth, spriteHeight))
+																	  std::make_shared<Renderer::Sprite>(pTexture, 
+																										 const_cast<std::string&>(subTextureName), 
+																										 pShader, 
+																										 glm::vec2(0.f, 0.f), 
+																										 glm::vec2((float)spriteWidth, (float)spriteHeight)
+																										)
 																	 ).first->second;
 
 	return new_sprite;
@@ -133,13 +139,53 @@ std::shared_ptr<Renderer::Sprite> ResourceManager::GetSprite(const std::string& 
 	return nullptr;
 }
 
-std::shared_ptr<Renderer::Texture2D> ResourceManager::LoadTextureAtlas(const std::string& textureName, 
-																	const std::string& texturePath, 
-																	const std::vector<std::string> subTextures, 
+std::shared_ptr<Renderer::AnimatedSprite> ResourceManager::LoadAnimatedSprite(const std::string& spriteName, const std::string& textureName, const std::string& shaderName, const unsigned int spriteWidth, const unsigned int spriteHeight, const std::string& subTextureName)
+{
+	auto pTexture = GetTexture(textureName);
+	if (!pTexture)
+	{
+		std::cerr << "Can't find the texture: " << textureName << " for the animated sprite: " << spriteName << std::endl;
+		return nullptr;
+	}
+
+	auto pShader = GetShaderProgram(shaderName);
+	if (!pShader)
+	{
+		std::cerr << "Can't find the shader: " << shaderName << " for the animated sprite: " << spriteName << std::endl;
+		return nullptr;
+	}
+
+	std::shared_ptr<Renderer::AnimatedSprite> new_sprite = m_animated_sprites_.emplace(spriteName,
+																					   std::make_shared<Renderer::AnimatedSprite>(pTexture, 
+																																  const_cast<std::string&>(subTextureName),
+																																  pShader, 
+																																  glm::vec2(0.f, 0.f), 
+																																  glm::vec2((float)spriteWidth, (float)spriteHeight)
+																																)
+																					  ).first->second;
+
+	return new_sprite;
+}
+
+std::shared_ptr<Renderer::AnimatedSprite> ResourceManager::GetAnimatedSprite(const std::string& spriteName)
+{
+	auto it = m_animated_sprites_.find(spriteName);
+	if (it != m_animated_sprites_.end()) {
+		return it->second;
+	}
+
+	std::cerr << "Can't find the animated sprite: " << spriteName << std::endl;
+
+	return nullptr;
+}
+
+std::shared_ptr<Renderer::Texture2D> ResourceManager::LoadTextureAtlas(std::string textureName, 
+																	std::string texturePath, 
+																	std::vector<std::string> subTextures, 
 																	const unsigned int subTextureWidth, 
 																	const unsigned int subTextureHeight)
 {
-	auto pTexture = LoadTexture(textureName, texturePath);
+	auto pTexture = LoadTexture(std::move(textureName), std::move(texturePath));
 	if (pTexture) 
 	{
 		const unsigned int textureWidth = pTexture->Width();

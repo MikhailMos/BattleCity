@@ -6,10 +6,12 @@
 
 #include <iostream>
 #include <string>
+#include <chrono>
 
 #include "renderer/Texture2D.h"
 #include "renderer/ShaderProgram.h"
 #include "renderer/Sprite.h"
+#include "renderer/AnimatedSprite.h"
 #include "resources/ResourceManager.h"
 
 
@@ -107,11 +109,34 @@ int main(int argc, char** argv)
 
         auto tex = resourceManager.LoadTexture("DefaultTexture", "resources/textures/map_16x16.png");
 
-        std::vector<std::string> subTexturesNames = {"block", "topBlock", "bottomBlock", "leftBlock", "rightBlock", "topLeftBlock", "topRigthBlock", "bottomLeftBlock", "bottomRightBlock", "beton"};
+        std::vector<std::string> subTexturesNames = {
+            /*"block", "topBlock", "bottomBlock", "leftBlock", "rightBlock", "topLeftBlock", "topRigthBlock", 
+            "bottomLeftBlock", "bottomRightBlock", "beton",*/
+            "eagle",                "deadEagle",             "respawn1",             "respawn2",              "respawn3",   "respawn4",   "shield1",    "shield2",
+            "explosionTopLeftBig1", "explosionTopRightBig1", "explosionTopLeftBig2", "explosionTopRightBig2", "explosion1", "explosion2", "explosion3", "nothing"
+        };
         auto pTextureAtlas = resourceManager.LoadTextureAtlas("DefaultTextureAtlas", "resources/textures/map_16x16.png", std::move(subTexturesNames), 16, 16);
 
-        auto pSprite = resourceManager.LoadSprite("NewSprite", "DefaultTextureAtlas", "SpriteShader", 100, 100, "bottomLeftBlock");
+        auto pSprite = resourceManager.LoadSprite("NewSprite", "DefaultTextureAtlas", "SpriteShader", 100, 100, "shield1");
         pSprite->SetPosition(glm::vec2(300, 100));
+        
+        auto pAnimatedSprite = resourceManager.LoadAnimatedSprite("NewAnimatedSprite", "DefaultTextureAtlas", "SpriteShader", 100, 100, "eagle");
+        pAnimatedSprite->SetPosition(glm::vec2(300, 300));
+
+        std::vector<std::pair<std::string, uint64_t>> respawnState;
+        respawnState.emplace_back(std::make_pair<std::string, uint64_t>("respawn1", 1000000000));
+        respawnState.emplace_back(std::make_pair<std::string, uint64_t>("respawn2", 1000000000));
+        respawnState.emplace_back(std::make_pair<std::string, uint64_t>("respawn3", 1000000000));
+        respawnState.emplace_back(std::make_pair<std::string, uint64_t>("respawn4", 1000000000));
+
+        std::vector<std::pair<std::string, uint64_t>> eagleState;
+        eagleState.emplace_back(std::make_pair<std::string, uint64_t>("eagle", 1000000000));
+        eagleState.emplace_back(std::make_pair<std::string, uint64_t>("deadEagle", 1000000000));
+        
+        pAnimatedSprite->InsertState("RespawnState", std::move(respawnState));
+        pAnimatedSprite->InsertState("EagleState", std::move(eagleState));
+        
+        pAnimatedSprite->SetState("RespawnState");
 
         GLuint points_vbo = 0;
         glGenBuffers(1, &points_vbo);
@@ -161,9 +186,17 @@ int main(int argc, char** argv)
         pSpriteShaderProgram->SetInt("tex", 0);
         pSpriteShaderProgram->SetMatrix4("projectionMat", projectionMatrix);
 
+        auto lastTime = std::chrono::high_resolution_clock::now();
+
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(pWindow))
         {
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            uint64_t duration = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - lastTime).count();
+            lastTime = currentTime;
+
+            pAnimatedSprite->Update(duration);
+            
             /* Render here */
             glClear(GL_COLOR_BUFFER_BIT);
 
@@ -178,6 +211,8 @@ int main(int argc, char** argv)
             glDrawArrays(GL_TRIANGLES, 0, 3);
 
             pSprite->Render();
+
+            pAnimatedSprite->Render();
 
             /* Swap front and back buffers */
             glfwSwapBuffers(pWindow);

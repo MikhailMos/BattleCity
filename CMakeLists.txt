@@ -30,6 +30,8 @@ set(TEXTURE_2D
 set(SPRITE
 	src/renderer/Sprite.h
 	src/renderer/Sprite.cpp
+	src/renderer/AnimatedSprite.h
+	src/renderer/AnimatedSprite.cpp
 )
 
 # добавление файлов в проект
