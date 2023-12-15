@@ -13,10 +13,25 @@
 #define STBI_ONLY_PNG
 #include "stb_image.h"
 
-ResourceManager::ResourceManager(const std::string& executablePath)
+ResourceManager::ShaderProgramsMap ResourceManager::m_shaderPrograms_;
+std::string ResourceManager::m_path_;
+ResourceManager::TexturesMap ResourceManager::m_textures_;
+ResourceManager::SpritesMap ResourceManager::m_sprites_;
+ResourceManager::AnimatedSpritesMap ResourceManager::m_animated_sprites_;
+
+void ResourceManager::SetExecutablePath(const std::string& executablePath)
 {
 	size_t found = executablePath.find_last_of("/\\");
 	m_path_ = executablePath.substr(0, found);
+}
+
+void ResourceManager::UnloadAllResources()
+{
+	m_shaderPrograms_.clear();
+	m_path_.clear();
+	m_textures_.clear();
+	m_sprites_.clear();
+	m_animated_sprites_.clear();
 }
 
 std::shared_ptr<Renderer::ShaderProgram> ResourceManager::LoadShaders(const std::string& shaderName, const std::string& vertexPath, const std::string& fragmentPath)
@@ -212,7 +227,7 @@ std::shared_ptr<Renderer::Texture2D> ResourceManager::LoadTextureAtlas(std::stri
 	return pTexture;
 }
 
-std::string ResourceManager::GetFileString(const std::string& relativeFilePath) const
+std::string ResourceManager::GetFileString(const std::string& relativeFilePath)
 {
 	std::ifstream f;
 	f.open(m_path_ + "/" + relativeFilePath.c_str(), std::ios::in | std::ios::binary);

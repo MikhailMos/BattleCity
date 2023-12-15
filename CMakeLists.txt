@@ -34,6 +34,11 @@ set(SPRITE
 	src/renderer/AnimatedSprite.cpp
 )
 
+set(GAME
+	src/game/Game.h
+	src/game/Game.cpp
+)
+
 # добавление файлов в проект
 add_executable(${PROJECT_NAME} 
 	src/main.cpp
@@ -42,6 +47,7 @@ add_executable(${PROJECT_NAME}
 	${SPRITE}
 	${RESOURCE_MANAGER}
 	${LOAD_IMAGE}
+	${GAME}
 )
 
 # опции необходимые для GLFW
