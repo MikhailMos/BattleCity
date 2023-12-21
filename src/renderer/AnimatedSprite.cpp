@@ -29,18 +29,10 @@ namespace Renderer {
 				 subTexture.leftBottomUV.x, subTexture.leftBottomUV.y,
 				 subTexture.leftBottomUV.x, subTexture.rightTopUV.y,
 				 subTexture.rightTopUV.x,   subTexture.rightTopUV.y,
-
-				 subTexture.rightTopUV.x,   subTexture.rightTopUV.y,
 				 subTexture.rightTopUV.x,   subTexture.leftBottomUV.y,
-				 subTexture.leftBottomUV.x, subTexture.leftBottomUV.y
 			};
 
-			// для передачи данных, привязываем буфер
-			glBindBuffer(GL_ARRAY_BUFFER, textureCoordsVBO_);
-			// обновляем данные
-			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(textureCoords), &textureCoords);
-			// отвязываем буфер
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			textureCoordsBuffer_.Update(textureCoords, 2 * 4 * sizeof(GLfloat));
 
 			dirty_ = false;
 		}

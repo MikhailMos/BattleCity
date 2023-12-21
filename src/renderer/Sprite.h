@@ -1,5 +1,9 @@
 ﻿#pragma once
 
+#include "IndexBuffer.h"
+#include "VertexBuffer.h"
+#include "VertexArray.h"
+
 #include "glad/glad.h"
 #include "glm/vec2.hpp"
 
@@ -37,9 +41,11 @@ namespace Renderer {
 		glm::vec2 position_;
 		glm::vec2 size_;
 		float rotation_;
-		GLuint VAO_;
-		GLuint vertexCoordsVBO_;
-		GLuint textureCoordsVBO_;
+		
+		VertexArray vertexArray_;
+		VertexBuffer vertexCoordsBuffer_;
+		VertexBuffer textureCoordsBuffer_;
+		IndexBuffer indexBuffer_;
 	};
 
 }

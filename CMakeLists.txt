@@ -12,6 +12,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(RENDERER 
 	src/renderer/ShaderProgram.h
 	src/renderer/ShaderProgram.cpp
+	src/renderer/VertexBuffer.h
+	src/renderer/VertexBuffer.cpp
+	src/renderer/IndexBuffer.h
+	src/renderer/IndexBuffer.cpp
+	src/renderer/VertexArray.h
+	src/renderer/VertexArray.cpp
+	src/renderer/VertexBufferLayout.h
+	src/renderer/VertexBufferLayout.cpp
 )
 set(RESOURCE_MANAGER
 	src/resources/ResourceManager.h
@@ -37,7 +45,12 @@ set(SPRITE
 set(GAME
 	src/game/Game.h
 	src/game/Game.cpp
+	src/game/Tank.h
+	src/game/Tank.cpp
 )
+
+
+
 
 # добавление файлов в проект
 add_executable(${PROJECT_NAME} 
