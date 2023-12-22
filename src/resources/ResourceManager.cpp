@@ -9,6 +9,9 @@
 #include <fstream>
 #include <iostream>
 
+#include <rapidjson/document.h>
+#include <rapidjson/error/en.h>
+
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_ONLY_PNG
 #include "stb_image.h"
@@ -225,6 +228,106 @@ std::shared_ptr<RenderEngine::Texture2D> ResourceManager::LoadTextureAtlas(std::
 	}
 
 	return pTexture;
+}
+
+bool ResourceManager::LoadJSONResources(const std::string& JSONPath)
+{
+	const std::string JSONString = GetFileString(JSONPath);
+	if (JSONString.empty())
+	{
+		std::cerr << "No JSON resources file!" << std::endl;
+		return false;
+	}
+
+	rapidjson::Document document;
+	rapidjson::ParseResult parseResult = document.Parse(JSONString.c_str());
+	if (!parseResult)
+	{
+		std::cerr << "JSON parse error: " << rapidjson::GetParseError_En(parseResult.Code()) << " (" << parseResult.Offset() << ")" << std::endl;
+		std::cerr << "In JSON file: " << JSONPath << std::endl;
+		return false;
+	}
+
+	// подгуражем шейдеры
+	auto shaderIt = document.FindMember("shaders");
+	if (shaderIt != document.MemberEnd()) 
+	{
+		for (const auto& currentShader : shaderIt->value.GetArray()) 
+		{
+			const std::string name = currentShader["name"].GetString();
+			const std::string filePath_v = currentShader["filePath_v"].GetString();
+			const std::string filePath_f = currentShader["filePath_f"].GetString();
+
+			LoadShaders(name, filePath_v, filePath_f);
+		}
+	}
+
+	// подгружаем текстурные атласы
+	auto textureAtlasesIt = document.FindMember("textureAtlases");
+	if (textureAtlasesIt != document.MemberEnd())
+	{
+		for (const auto& currentTextureAtlas : textureAtlasesIt->value.GetArray())
+		{
+			const std::string name = currentTextureAtlas["name"].GetString();
+			const std::string filePath = currentTextureAtlas["filePath"].GetString();
+			const unsigned int subTextureWidth = currentTextureAtlas["subTextureWidth"].GetInt();
+			const unsigned int subTextureHeight = currentTextureAtlas["subTextureHeight"].GetInt();
+
+			const auto subTexturesArray = currentTextureAtlas["subTextures"].GetArray();
+			std::vector<std::string> subTextures;
+			subTextures.reserve(subTexturesArray.Size());
+
+			for (const auto& currentSubTexture : subTexturesArray)
+			{
+				subTextures.emplace_back(currentSubTexture.GetString());
+			}
+
+			LoadTextureAtlas(name, filePath, std::move(subTextures), subTextureWidth, subTextureHeight);
+		}
+	}
+
+	// подгружаем анимацию (спрайты)
+	auto animatedSpritesIt = document.FindMember("animatedSprites");
+	if (animatedSpritesIt != document.MemberEnd())
+	{
+		for (const auto& currentAnimatedSprite : animatedSpritesIt->value.GetArray())
+		{
+			const std::string name = currentAnimatedSprite["name"].GetString();
+			const std::string textureAtlas = currentAnimatedSprite["textureAtlas"].GetString();
+			const std::string shader = currentAnimatedSprite["shader"].GetString();
+			const unsigned int initialWidth = currentAnimatedSprite["initialWidth"].GetInt();
+			const unsigned int initialHeight = currentAnimatedSprite["initialHeight"].GetInt();
+			const std::string initialSubTexture = currentAnimatedSprite["initialSubTexture"].GetString();
+			
+			auto pAnimatedSprite = LoadAnimatedSprite(name, textureAtlas, shader, initialWidth, initialHeight, initialSubTexture);
+			if (!pAnimatedSprite)
+			{
+				continue;
+			}
+
+			const auto statesArray = currentAnimatedSprite["states"].GetArray();
+			for (const auto& currentState : statesArray)
+			{
+				const std::string stateName = currentState["stateName"].GetString();
+				
+				const auto framesArray = currentState["frames"].GetArray();
+				std::vector<std::pair<std::string, uint64_t>> frames;
+				frames.reserve(framesArray.Size());
+				for (const auto& currentFrame : framesArray)
+				{
+					const std::string subTexture = currentFrame["subTexture"].GetString();
+					const uint64_t duration = currentFrame["duration"].GetUint64();
+
+					frames.emplace_back(std::make_pair(subTexture, duration));
+				}
+
+				pAnimatedSprite->InsertState(stateName, std::move(frames));
+			}
+
+		}
+	}
+
+	return true;
 }
 
 std::string ResourceManager::GetFileString(const std::string& relativeFilePath)

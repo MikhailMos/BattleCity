@@ -81,6 +81,10 @@ int main(int argc, char** argv)
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(pWindow))
         {
+            /* Poll for and process events */
+            glfwPollEvents();
+            
+            /* Обновляем все объекты, которые есть в игровом мире */
             auto currentTime = std::chrono::high_resolution_clock::now();
             uint64_t duration = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - lastTime).count();
             lastTime = currentTime;
@@ -88,15 +92,14 @@ int main(int argc, char** argv)
             g_game.Update(duration);
             
             /* Render here */
+            // очищаем экран
             RenderEngine::Renderer::Clear();
-
+            // рисуем картинку
             g_game.Render();
 
             /* Swap front and back buffers */
+            // выводим картинку на монитор
             glfwSwapBuffers(pWindow);
-
-            /* Poll for and process events */
-            glfwPollEvents();
         }
 
         ResourceManager::UnloadAllResources();

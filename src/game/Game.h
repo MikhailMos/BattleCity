@@ -18,14 +18,14 @@ public:
 	bool Init();
 
 private:
-	std::array<bool, 349> m_keys_;
+	std::array<bool, 349> m_keys_; // нажатые клавиши
 
 	enum EGameState {
 		Active,
 		Pause
 	};
 
-	EGameState m_eCurrentGameState_;
-	glm::ivec2 m_windowSize_;
-	std::unique_ptr<Tank> m_p_tank_;
+	EGameState m_eCurrentGameState_; // текущее состояние игрового мира
+	glm::ivec2 m_windowSize_;		 // размер окна
+	std::unique_ptr<Tank> m_p_tank_; // игровой объект
 };

@@ -82,6 +82,8 @@ target_link_libraries(${PROJECT_NAME} glad)
 # включаем возможность инклюдировать функции glm в нашем проекте
 include_directories(external/glm)
 
+# подключаем библиотеку RapidJSON
+include_directories(external/rapidjson/include)
 
 # Чтоб исполняемый файл в месте с ресурсами лежал отедльно
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)
