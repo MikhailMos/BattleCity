@@ -2,11 +2,12 @@
 
 #include "ShaderProgram.h"
 #include "Texture2D.h"
+#include "Renderer.h"
 
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-namespace Renderer {
+namespace RenderEngine {
 	
 	Sprite::Sprite(std::shared_ptr<Texture2D> pTexture, std::string& initialSubTexture, std::shared_ptr<ShaderProgram> pShaderProgram, const glm::vec2& position, const glm::vec2& size, const float rotation)
 		: pTexture_(std::move(pTexture))
@@ -56,7 +57,7 @@ namespace Renderer {
 		vertexArray_.AddBuffer(textureCoordsBuffer_, textureCoordsLayout);
 
 		// ELEMENT BUFFER OBJECT
-		indexBuffer_.Init(indices, 6 * sizeof(GLuint));
+		indexBuffer_.Init(indices, 6);
 
 		// очищаем
 		vertexArray_.Unbind();
@@ -85,19 +86,14 @@ namespace Renderer {
 		model = glm::translate(model, glm::vec3(-0.5f * size_.x, -0.5f * size_.y, 0.f));
 		//1. изменяем размер
 		model = glm::scale(model, glm::vec3(size_, 1.f));
-
 		
-		vertexArray_.Bind();
 		pShaderProgram_->SetMatrix4("modelMat", model);
 
 		// активируем текстуру
 		glActiveTexture(GL_TEXTURE0);
 		pTexture_->Bind();
 
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-		// зануляем
-		vertexArray_.Unbind();
+		Renderer::Draw(vertexArray_, indexBuffer_, *pShaderProgram_);
 	}
 
 	void Sprite::SetPosition(const glm::vec2& position)

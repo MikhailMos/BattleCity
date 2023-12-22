@@ -20,6 +20,8 @@ set(RENDERER
 	src/renderer/VertexArray.cpp
 	src/renderer/VertexBufferLayout.h
 	src/renderer/VertexBufferLayout.cpp
+	src/renderer/Renderer.h
+	src/renderer/Renderer.cpp
 )
 set(RESOURCE_MANAGER
 	src/resources/ResourceManager.h

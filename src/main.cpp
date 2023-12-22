@@ -8,6 +8,7 @@
 
 #include "game/Game.h"
 #include "resources/ResourceManager.h"
+#include "renderer/Renderer.h"
 
 glm::ivec2 g_windowSize(640, 480);
 Game g_game(g_windowSize);
@@ -16,7 +17,8 @@ void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height)
 {
     g_windowSize.x = width;
     g_windowSize.y = height;
-    glViewport(0, 0, g_windowSize.x, g_windowSize.y);
+   
+    RenderEngine::Renderer::SetViewport(width, height);
 }
 
 void glfwKeyCallback(GLFWwindow* pWindow, int key, int scancode, int action, int mode)
@@ -64,10 +66,10 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-    std::cout << "Renderer: " << glGetString(GL_RENDERER) << " \nVendor: " << glGetString(GL_VENDOR) << std::endl;
-    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+    std::cout << "Renderer: " << RenderEngine::Renderer::GetRendererStr() << " \nVendor: " << RenderEngine::Renderer::GetVendorStr() << std::endl;
+    std::cout << "OpenGL version: " << RenderEngine::Renderer::GetVersionStr() << std::endl;
 
-    glClearColor(0, 0, 0, 1);
+    RenderEngine::Renderer::SetClearColor(0, 0, 0, 1);
 
     {
         // создание шейдеров
@@ -86,7 +88,7 @@ int main(int argc, char** argv)
             g_game.Update(duration);
             
             /* Render here */
-            glClear(GL_COLOR_BUFFER_BIT);
+            RenderEngine::Renderer::Clear();
 
             g_game.Render();
 
