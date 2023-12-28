@@ -6,7 +6,8 @@
 #include "../renderer/Sprite.h"
 #include "../renderer/AnimatedSprite.h"
 
-#include "Tank.h"
+#include "GameObjects/Tank.h"
+#include "Level.h"
 
 #include "GLFW/glfw3.h"
 #include "glm/gtc/matrix_transform.hpp"
@@ -27,16 +28,24 @@ Game::~Game()
 
 void Game::Render()
 {
-    //ResourceManager::GetAnimatedSprite("NewAnimatedSprite")->Render();
     if (m_p_tank_)
     {
         m_p_tank_->Render();
+    }
+
+    if (m_p_level_)
+    {
+        m_p_level_->Render();
     }
 }
 
 void Game::Update(const uint64_t delta)
 {
-    //ResourceManager::GetAnimatedSprite("NewAnimatedSprite")->Update(delta);
+    if (m_p_level_)
+    {
+        m_p_level_->Update(delta);
+    }
+    
     if (m_p_tank_) 
     {
         if (m_keys_[GLFW_KEY_W])
@@ -97,25 +106,6 @@ bool Game::Init()
         std::cerr << "Can't find texture atlas: " << "tanksTextureAtlas" << std::endl;
         return false;
     }
-
-    auto pAnimatedSprite = ResourceManager::LoadAnimatedSprite("NewAnimatedSprite", "mapTextureAtlas", "spriteShader", 100, 100, "eagle");
-    pAnimatedSprite->SetPosition(glm::vec2(300, 300));
-
-    std::vector<std::pair<std::string, uint64_t>> respawnState;
-    respawnState.emplace_back(std::make_pair<std::string, uint64_t>("respawn1", 1000000000));
-    respawnState.emplace_back(std::make_pair<std::string, uint64_t>("respawn2", 1000000000));
-    respawnState.emplace_back(std::make_pair<std::string, uint64_t>("respawn3", 1000000000));
-    respawnState.emplace_back(std::make_pair<std::string, uint64_t>("respawn4", 1000000000));
-
-    std::vector<std::pair<std::string, uint64_t>> eagleState;
-    eagleState.emplace_back(std::make_pair<std::string, uint64_t>("eagle", 1000000000));
-    eagleState.emplace_back(std::make_pair<std::string, uint64_t>("eagle_dead", 1000000000));
-
-    pAnimatedSprite->InsertState("RespawnState", std::move(respawnState));
-    pAnimatedSprite->InsertState("EagleState", std::move(eagleState));
-
-    pAnimatedSprite->SetState("RespawnState");
-
    
     glm::mat4 projectionMatrix = glm::ortho(0.f, static_cast<float>(m_windowSize_.x), 0.f, static_cast<float>(m_windowSize_.y), -100.f, 100.f);
 
@@ -131,7 +121,10 @@ bool Game::Init()
         return false;
     }
 
-    m_p_tank_ = std::make_unique<Tank>(pTanksAnimatedSprite, 0.0000001f, glm::vec2(100.f, 100.f));
+    m_p_tank_ = std::make_unique<Tank>(pTanksAnimatedSprite, 0.0000001f, glm::vec2(0), glm::vec2(16.f, 16.f));
+
+    // INITIALIZING LEVEL
+    m_p_level_ = std::make_unique<Level>(ResourceManager::GetLevels()[0]);
 
     return true;
 }

@@ -6,6 +6,7 @@
 #include "glm/vec2.hpp"
 
 class Tank;
+class Level;
 
 class Game {
 public:
@@ -28,4 +29,5 @@ private:
 	EGameState m_eCurrentGameState_; // текущее состояние игрового мира
 	glm::ivec2 m_windowSize_;		 // размер окна
 	std::unique_ptr<Tank> m_p_tank_; // игровой объект
+	std::unique_ptr<Level> m_p_level_; // уровень
 };

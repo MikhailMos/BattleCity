@@ -9,12 +9,9 @@
 
 namespace RenderEngine {
 	
-	Sprite::Sprite(std::shared_ptr<Texture2D> pTexture, std::string& initialSubTexture, std::shared_ptr<ShaderProgram> pShaderProgram, const glm::vec2& position, const glm::vec2& size, const float rotation)
+	Sprite::Sprite(std::shared_ptr<Texture2D> pTexture, std::string& initialSubTexture, std::shared_ptr<ShaderProgram> pShaderProgram)
 		: pTexture_(std::move(pTexture))
 		, pShaderProgram_(std::move(pShaderProgram))
-		, position_(position)
-		, size_(size)
-		, rotation_(rotation)
 	{
 		const GLfloat vertexCoords[] = {
 			// 1-  2
@@ -69,7 +66,7 @@ namespace RenderEngine {
 	{
 	}
 
-	void Sprite::Render() const
+	void Sprite::Render(const glm::vec2& position, const glm::vec2& size, const float rotation) const
 	{
 		pShaderProgram_->Use();
 
@@ -77,15 +74,15 @@ namespace RenderEngine {
 
 		// по правилу математики с матрицами, все действия делаем задом на перед
 		//5. постановка спрайта в нужное место
-		model = glm::translate(model, glm::vec3(position_, 0.f));
+		model = glm::translate(model, glm::vec3(position, 0.f));
 		//4. перемещаем обратно, где был
-		model = glm::translate(model, glm::vec3(0.5f * size_.x, 0.5f * size_.y, 0.f));
+		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.f));
 		//3. поворачиваем
-		model = glm::rotate(model, glm::radians(rotation_), glm::vec3(0.f, 0.f, 1.f));
+		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.f, 0.f, 1.f));
 		//2. перемещаем к центру, чтобы ориджин был в центре спрайта
-		model = glm::translate(model, glm::vec3(-0.5f * size_.x, -0.5f * size_.y, 0.f));
+		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.f));
 		//1. изменяем размер
-		model = glm::scale(model, glm::vec3(size_, 1.f));
+		model = glm::scale(model, glm::vec3(size, 1.f));
 		
 		pShaderProgram_->SetMatrix4("modelMat", model);
 
@@ -96,18 +93,4 @@ namespace RenderEngine {
 		Renderer::Draw(vertexArray_, indexBuffer_, *pShaderProgram_);
 	}
 
-	void Sprite::SetPosition(const glm::vec2& position)
-	{
-		position_ = position;
-	}
-
-	void Sprite::SetSize(const glm::vec2& size)
-	{
-		size_ = size;
-	}
-
-	void Sprite::SetRotation(const float rotation)
-	{
-		rotation_ = rotation;
-	}
 }

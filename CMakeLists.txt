@@ -47,12 +47,18 @@ set(SPRITE
 set(GAME
 	src/game/Game.h
 	src/game/Game.cpp
-	src/game/Tank.h
-	src/game/Tank.cpp
+	src/game/Level.h
+	src/game/Level.cpp
 )
 
-
-
+set(GAME_OBJECTS
+	src/game/GameObjects/Tank.h
+	src/game/GameObjects/Tank.cpp
+	src/game/GameObjects/iGameObject.h
+	src/game/GameObjects/iGameObject.cpp
+	src/game/GameObjects/BrickWall.h
+	src/game/GameObjects/BrickWall.cpp
+)
 
 # добавление файлов в проект
 add_executable(${PROJECT_NAME} 
@@ -63,6 +69,7 @@ add_executable(${PROJECT_NAME}
 	${RESOURCE_MANAGER}
 	${LOAD_IMAGE}
 	${GAME}
+	${GAME_OBJECTS}
 )
 
 # опции необходимые для GLFW

@@ -34,16 +34,12 @@ public:
 	static std::shared_ptr<RenderEngine::Sprite> LoadSprite(const std::string& spriteName,
 												 const std::string& textureName, 
 												 const std::string& shaderName, 
-												 const unsigned int spriteWidth, 
-												 const unsigned int spriteHeight, 
 												 const std::string& subTextureName = "default");
 	static std::shared_ptr<RenderEngine::Sprite> GetSprite(const std::string& spriteName);
 
 	static std::shared_ptr<RenderEngine::AnimatedSprite> LoadAnimatedSprite(const std::string& spriteName,
 														 const std::string& textureName,
 														 const std::string& shaderName,
-														 const unsigned int spriteWidth,
-														 const unsigned int spriteHeight,
 														 const std::string& subTextureName = "default");
 	static std::shared_ptr<RenderEngine::AnimatedSprite> GetAnimatedSprite(const std::string& spriteName);
 
@@ -54,6 +50,8 @@ public:
 														  const unsigned int subTextureHeight);
 
 	static bool LoadJSONResources(const std::string& JSONPath);
+
+	static const std::vector<std::vector<std::string>>& GetLevels();
 
 
 private:
@@ -70,6 +68,8 @@ private:
 
 	typedef std::map<const std::string, std::shared_ptr<RenderEngine::AnimatedSprite>> AnimatedSpritesMap;
 	static AnimatedSpritesMap m_animated_sprites_;
+
+	static std::vector<std::vector<std::string>> levels_;
 
 	static std::string GetFileString(const std::string& relativeFilePath);
 

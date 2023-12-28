@@ -10,8 +10,13 @@
 #include "resources/ResourceManager.h"
 #include "renderer/Renderer.h"
 
-glm::ivec2 g_windowSize(640, 480);
-Game g_game(g_windowSize);
+const int LEVEL_WIDHT = 13;
+const int LEVEL_HEIGHT = 14;
+const int BLOCK_WIDTH = 16;
+const int BLOCK_HEIGHT = 16;
+
+glm::ivec2 g_windowSize((LEVEL_WIDHT * BLOCK_WIDTH), (LEVEL_HEIGHT * BLOCK_HEIGHT));
+std::unique_ptr<Game> g_game = std::make_unique<Game>(g_windowSize);
 
 void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height)
 {
@@ -28,7 +33,7 @@ void glfwKeyCallback(GLFWwindow* pWindow, int key, int scancode, int action, int
         glfwSetWindowShouldClose(pWindow, GL_TRUE);
     }
 
-    g_game.SetKey(key, action);
+    g_game->SetKey(key, action);
 }
 
 int main(int argc, char** argv)
@@ -74,7 +79,7 @@ int main(int argc, char** argv)
     {
         // создание шейдеров
         ResourceManager::SetExecutablePath(argv[0]);
-        g_game.Init();
+        g_game->Init();
 
         auto lastTime = std::chrono::high_resolution_clock::now();
 
@@ -89,19 +94,19 @@ int main(int argc, char** argv)
             uint64_t duration = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - lastTime).count();
             lastTime = currentTime;
 
-            g_game.Update(duration);
+            g_game->Update(duration);
             
             /* Render here */
             // очищаем экран
             RenderEngine::Renderer::Clear();
             // рисуем картинку
-            g_game.Render();
+            g_game->Render();
 
             /* Swap front and back buffers */
             // выводим картинку на монитор
             glfwSwapBuffers(pWindow);
         }
-
+        g_game = nullptr;
         ResourceManager::UnloadAllResources();
     }
 
