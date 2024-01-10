@@ -4,8 +4,6 @@
 #include <string>
 #include <memory>
 
-#include "../resources/ResourceManager.h"
-
 class IGameObjcect;
 
 class Level {

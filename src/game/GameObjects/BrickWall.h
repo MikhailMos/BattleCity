@@ -3,6 +3,7 @@
 #include "iGameObject.h"
 
 #include <memory>
+#include <array>
 
 namespace RenderEngine {
 	class Sprite;
@@ -50,11 +51,14 @@ public:
         BottomRight
     };
 
-	BrickWall(const std::shared_ptr<RenderEngine::Sprite> pSprite, const glm::vec2& position, const glm::vec2& size, const float rotation);
+	BrickWall(const EBrickWallType eBrickWallType, const glm::vec2& position, const glm::vec2& size, const float rotation);
 	virtual void Render() const override;
 	virtual void Update(const uint64_t delta) override;
 
 private:
-	std::shared_ptr<RenderEngine::Sprite> pCurrentSprite_;
+    std::array<EBrickState, 4> eCurrentBrickState_;
+	std::array<std::shared_ptr<RenderEngine::Sprite>, 15> sprites_;
+
+    void RenderBrick(const EBrickLocation eBrickLocation) const;
 };
 

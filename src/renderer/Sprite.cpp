@@ -12,6 +12,7 @@ namespace RenderEngine {
 	Sprite::Sprite(std::shared_ptr<Texture2D> pTexture, std::string& initialSubTexture, std::shared_ptr<ShaderProgram> pShaderProgram)
 		: pTexture_(std::move(pTexture))
 		, pShaderProgram_(std::move(pShaderProgram))
+		, last_frameId_(0)
 	{
 		const GLfloat vertexCoords[] = {
 			// 1-  2
@@ -66,8 +67,24 @@ namespace RenderEngine {
 	{
 	}
 
-	void Sprite::Render(const glm::vec2& position, const glm::vec2& size, const float rotation) const
+	void Sprite::Render(const glm::vec2& position, const glm::vec2& size, const float rotation, const size_t frameId) const
 	{
+		if (last_frameId_ != frameId)
+		{
+			last_frameId_ = frameId;
+			const FrameDescription& currentFrameDescription = framesDescriptions_[frameId];
+
+			const GLfloat textureCoords[] = {
+				// U						V
+				 currentFrameDescription.leftBottomUV.x, currentFrameDescription.leftBottomUV.y,
+				 currentFrameDescription.leftBottomUV.x, currentFrameDescription.rightTopUV.y,
+				 currentFrameDescription.rightTopUV.x,   currentFrameDescription.rightTopUV.y,
+				 currentFrameDescription.rightTopUV.x,   currentFrameDescription.leftBottomUV.y,
+			};
+
+			textureCoordsBuffer_.Update(textureCoords, 2 * 4 * sizeof(GLfloat));
+		}
+		
 		pShaderProgram_->Use();
 
 		glm::mat4 model(1.f);
@@ -91,6 +108,21 @@ namespace RenderEngine {
 		pTexture_->Bind();
 
 		Renderer::Draw(vertexArray_, indexBuffer_, *pShaderProgram_);
+	}
+
+	uint64_t Sprite::GetFrameDuration(const size_t frameId) const
+	{
+		return framesDescriptions_[frameId].duration;
+	}
+
+	size_t Sprite::GetFramesCount() const
+	{
+		return framesDescriptions_.size();
+	}
+
+	void Sprite::InsertFrames(std::vector<FrameDescription> framesDescriptions)
+	{
+		framesDescriptions_ = std::move(framesDescriptions);
 	}
 
 }

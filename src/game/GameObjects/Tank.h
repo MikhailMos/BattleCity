@@ -4,9 +4,10 @@
 #include <memory>
 
 #include "iGameObject.h"
+#include "../../renderer/SpriteAnimator.h"
 
 namespace RenderEngine {
-	class AnimatedSprite;
+	class Sprite;
 }
 
 class Tank : IGameObjcect {
@@ -18,7 +19,9 @@ public:
 		Right
 	};
 
-	Tank(std::shared_ptr<RenderEngine::AnimatedSprite> pSprite, const float velocity, const glm::vec2& position, const glm::vec2& size);
+	Tank(const float velocity, 
+		const glm::vec2& position, 
+		const glm::vec2& size);
 
 	void Render() const override;
 	void SetOrientation(const EOrientation eOrientation);
@@ -27,7 +30,15 @@ public:
 
 private:
 	EOrientation e_orientation_;
-	std::shared_ptr<RenderEngine::AnimatedSprite> p_sprite_;
+	std::shared_ptr<RenderEngine::Sprite> pSprite_top_;
+	std::shared_ptr<RenderEngine::Sprite> pSprite_bottom_;
+	std::shared_ptr<RenderEngine::Sprite> pSprite_left_;
+	std::shared_ptr<RenderEngine::Sprite> pSprite_right_;
+	RenderEngine::SpriteAnimator spriteAnimator_top_;
+	RenderEngine::SpriteAnimator spriteAnimator_bottom_;
+	RenderEngine::SpriteAnimator spriteAnimator_left_;
+	RenderEngine::SpriteAnimator spriteAnimator_right_;
+	
 	bool move_;
 	float velocity_; // скорость танка
 	glm::vec2 move_offset_; // вектор направления танка

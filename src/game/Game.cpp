@@ -4,7 +4,6 @@
 #include "../renderer/Texture2D.h"
 #include "../renderer/ShaderProgram.h"
 #include "../renderer/Sprite.h"
-#include "../renderer/AnimatedSprite.h"
 
 #include "GameObjects/Tank.h"
 #include "Level.h"
@@ -93,20 +92,6 @@ bool Game::Init()
         return false;
     }
     
-    auto pTextureAtlas = ResourceManager::GetTexture("mapTextureAtlas");
-    if (!pTextureAtlas)
-    {
-        std::cerr << "Can't find texture atlas: " << "mapTextureAtlas" << std::endl;
-        return false;
-    }
-    
-    auto pTanksTextureAtlas = ResourceManager::GetTexture("tanksTextureAtlas");
-    if (!pTanksTextureAtlas)
-    {
-        std::cerr << "Can't find texture atlas: " << "tanksTextureAtlas" << std::endl;
-        return false;
-    }
-   
     glm::mat4 projectionMatrix = glm::ortho(0.f, static_cast<float>(m_windowSize_.x), 0.f, static_cast<float>(m_windowSize_.y), -100.f, 100.f);
 
     pSpriteShaderProgram->Use();
@@ -114,14 +99,7 @@ bool Game::Init()
     pSpriteShaderProgram->SetMatrix4("projectionMat", projectionMatrix);
 
     // INITIALIZING TANK
-    auto pTanksAnimatedSprite = ResourceManager::GetAnimatedSprite("tankAnimatedSprite");
-    if (!pTanksAnimatedSprite)
-    {
-        std::cerr << "Can't find animated sprite: " << "tankAnimatedSprite" << std::endl;
-        return false;
-    }
-
-    m_p_tank_ = std::make_unique<Tank>(pTanksAnimatedSprite, 0.0000001f, glm::vec2(0), glm::vec2(16.f, 16.f));
+    m_p_tank_ = std::make_unique<Tank>(0.0000001f, glm::vec2(0), glm::vec2(16.f, 16.f));
 
     // INITIALIZING LEVEL
     m_p_level_ = std::make_unique<Level>(ResourceManager::GetLevels()[0]);

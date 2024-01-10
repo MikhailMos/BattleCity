@@ -40,8 +40,8 @@ set(TEXTURE_2D
 set(SPRITE
 	src/renderer/Sprite.h
 	src/renderer/Sprite.cpp
-	src/renderer/AnimatedSprite.h
-	src/renderer/AnimatedSprite.cpp
+	src/renderer/SpriteAnimator.h
+	src/renderer/SpriteAnimator.cpp
 )
 
 set(GAME
