@@ -48,7 +48,7 @@
 		},
 
 		{
-			"name": "mapTextureAtlas",
+			"name": "mapTextureAtlas_16x16",
 			"filePath": "resources/textures/map_16x16.png",
 			"subTextureWidth": 16,
 			"subTextureHeight": 16,

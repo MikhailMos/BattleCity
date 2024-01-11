@@ -102,7 +102,7 @@ bool Game::Init()
     m_p_tank_ = std::make_unique<Tank>(0.0000001f, glm::vec2(0), glm::vec2(16.f, 16.f));
 
     // INITIALIZING LEVEL
-    m_p_level_ = std::make_unique<Level>(ResourceManager::GetLevels()[0]);
+    m_p_level_ = std::make_unique<Level>(ResourceManager::GetLevels()[1]);
 
     return true;
 }

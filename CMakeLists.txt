@@ -60,6 +60,14 @@ set(GAME_OBJECTS
 	src/game/GameObjects/BrickWall.cpp
 	src/game/GameObjects/BetonWall.h
 	src/game/GameObjects/BetonWall.cpp
+	src/game/GameObjects/Trees.h
+	src/game/GameObjects/Trees.cpp
+	src/game/GameObjects/Ice.h
+	src/game/GameObjects/Ice.cpp
+	src/game/GameObjects/Water.h
+	src/game/GameObjects/Water.cpp
+	src/game/GameObjects/Eagle.h
+	src/game/GameObjects/Eagle.cpp
 )
 
 # добавление файлов в проект

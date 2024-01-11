@@ -6,7 +6,7 @@ class IGameObjcect {
 public:
 	IGameObjcect(const glm::vec2& position, const glm::vec2& size, const float rotation);
 	virtual void Render() const = 0;
-	virtual void Update(const uint64_t delta) = 0;
+	virtual void Update(const uint64_t delta) {};
 	virtual ~IGameObjcect();
 
 protected:
