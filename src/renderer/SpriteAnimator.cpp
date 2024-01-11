@@ -1,4 +1,4 @@
-#include "SpriteAnimator.h"
+﻿#include "SpriteAnimator.h"
 
 #include "Sprite.h"
 

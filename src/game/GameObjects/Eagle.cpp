@@ -1,4 +1,4 @@
-#include "Eagle.h"
+﻿#include "Eagle.h"
 
 #include "../../resources/ResourceManager.h"
 #include "../../renderer/Sprite.h"

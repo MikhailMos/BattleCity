@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <array>
 #include <memory>
@@ -17,6 +17,8 @@ public:
 	void Update(const uint64_t delta);
 	void SetKey(const int key, const int action);
 	bool Init();
+	size_t GetCurrentLevelWidth() const;
+	size_t GetCurrentLevelHeight() const;
 
 private:
 	std::array<bool, 349> m_keys_; // нажатые клавиши

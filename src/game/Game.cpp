@@ -1,4 +1,4 @@
-#include "Game.h"
+﻿#include "Game.h"
 
 #include "../resources/ResourceManager.h"
 #include "../renderer/Texture2D.h"
@@ -92,6 +92,12 @@ bool Game::Init()
         return false;
     }
     
+    // INITIALIZING LEVEL
+    m_p_level_ = std::make_unique<Level>(ResourceManager::GetLevels()[1]);
+    
+    m_windowSize_.x = static_cast<int>(m_p_level_->GetLevelWidth());
+    m_windowSize_.y = static_cast<int>(m_p_level_->GetLevelHeight());
+
     glm::mat4 projectionMatrix = glm::ortho(0.f, static_cast<float>(m_windowSize_.x), 0.f, static_cast<float>(m_windowSize_.y), -100.f, 100.f);
 
     pSpriteShaderProgram->Use();
@@ -101,8 +107,17 @@ bool Game::Init()
     // INITIALIZING TANK
     m_p_tank_ = std::make_unique<Tank>(0.0000001f, glm::vec2(0), glm::vec2(16.f, 16.f), 0.f);
 
-    // INITIALIZING LEVEL
-    m_p_level_ = std::make_unique<Level>(ResourceManager::GetLevels()[1]);
+    
 
     return true;
+}
+
+size_t Game::GetCurrentLevelWidth() const
+{
+    return m_p_level_->GetLevelWidth();
+}
+
+size_t Game::GetCurrentLevelHeight() const
+{
+    return m_p_level_->GetLevelHeight();
 }

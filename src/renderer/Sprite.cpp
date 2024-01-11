@@ -1,4 +1,4 @@
-#include "Sprite.h"
+﻿#include "Sprite.h"
 
 #include "ShaderProgram.h"
 #include "Texture2D.h"

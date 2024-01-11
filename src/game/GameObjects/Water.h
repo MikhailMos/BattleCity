@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "iGameObject.h"
 #include "../../renderer/SpriteAnimator.h"

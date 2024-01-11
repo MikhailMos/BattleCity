@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
+﻿cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
 # переменная имя проекта
 set(PROJECT_NAME BattleCity)
@@ -68,6 +68,8 @@ set(GAME_OBJECTS
 	src/game/GameObjects/Water.cpp
 	src/game/GameObjects/Eagle.h
 	src/game/GameObjects/Eagle.cpp
+	src/game/GameObjects/Border.h
+	src/game/GameObjects/Border.cpp
 )
 
 # добавление файлов в проект

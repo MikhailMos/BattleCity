@@ -1,4 +1,4 @@
-#include "glad/glad.h"
+﻿#include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "glm/vec2.hpp"
 
@@ -23,7 +23,7 @@ void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height)
     g_windowSize.x = width;
     g_windowSize.y = height;
 
-    const float map_aspect_ratio = 13.f / 14.f;
+    const float map_aspect_ratio = static_cast<float>(g_game->GetCurrentLevelWidth()) / g_game->GetCurrentLevelHeight();
     unsigned int viewPortWidth = g_windowSize.x;
     unsigned int viewPortHeight = g_windowSize.y;
     unsigned int viewPortLeftOffset = 0;

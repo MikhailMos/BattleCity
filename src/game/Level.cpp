@@ -1,4 +1,4 @@
-#include "Level.h"
+﻿#include "Level.h"
 
 #include <iostream>
 #include <algorithm>
@@ -10,6 +10,7 @@
 #include "GameObjects/Ice.h"
 #include "GameObjects/Water.h"
 #include "GameObjects/Eagle.h"
+#include "GameObjects/Border.h"
 
 const unsigned int BLOCK_SIZE = 16;
 
@@ -72,12 +73,12 @@ Level::Level(const std::vector<std::string>& levelDescription)
 	width_ = levelDescription[0].length();
 	height_ = levelDescription.size();
 
-	mapObjects_.reserve(width_ * height_);
-	unsigned int currentBottomOffset = static_cast<unsigned int>(BLOCK_SIZE * (height_ - 1));
+	mapObjects_.reserve(width_ * height_ + 4); // 4 - границы
+	unsigned int currentBottomOffset = static_cast<unsigned int>(BLOCK_SIZE * (height_ - 1) + BLOCK_SIZE / 2.f);
 
 	for (const std::string& currentRow : levelDescription)
 	{
-		unsigned int currentLeftOffset = 0;
+		unsigned int currentLeftOffset = BLOCK_SIZE;
 		// проходим по каждой букве строки
 		for (const char currentElement : currentRow)
 		{
@@ -86,6 +87,18 @@ Level::Level(const std::vector<std::string>& levelDescription)
 		}
 		currentBottomOffset -= BLOCK_SIZE;
 	}
+
+    // bottom border
+    mapObjects_.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, 0.f), glm::vec2(width_ * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
+
+    // top border
+    mapObjects_.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, height_ * BLOCK_SIZE + BLOCK_SIZE / 2.f), glm::vec2(width_ * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
+
+    // left border
+    mapObjects_.emplace_back(std::make_shared<Border>(glm::vec2(0.f, 0.f), glm::vec2(BLOCK_SIZE, (height_ + 1) * BLOCK_SIZE), 0.f, 0.f));
+
+    // right border
+    mapObjects_.emplace_back(std::make_shared<Border>(glm::vec2((width_ + 1) * BLOCK_SIZE, 0.f), glm::vec2(BLOCK_SIZE * 2.f, (height_ + 1) * BLOCK_SIZE), 0.f, 0.f));
 }
 
 void Level::Render() const
@@ -108,4 +121,14 @@ void Level::Update(const uint64_t delta)
 			currentMapOpbject->Update(delta);
 		}
 	}
+}
+
+size_t Level::GetLevelWidth() const
+{
+    return (width_ + 3) * BLOCK_SIZE;
+}
+
+size_t Level::GetLevelHeight() const
+{
+    return (height_ + 1) * BLOCK_SIZE;
 }

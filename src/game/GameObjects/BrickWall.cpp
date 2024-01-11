@@ -1,4 +1,4 @@
-#include "BrickWall.h"
+﻿#include "BrickWall.h"
 
 #include "../../resources/ResourceManager.h"
 #include "../../renderer/Sprite.h"
