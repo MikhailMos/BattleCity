@@ -58,6 +58,7 @@ public:
 private:
     std::array<EBrickState, 4> eCurrentBrickState_;
 	std::array<std::shared_ptr<RenderEngine::Sprite>, 15> sprites_;
+    std::array<glm::vec2, 4> blockOffsets_;
 
     void RenderBrick(const EBrickLocation eBrickLocation) const;
 };

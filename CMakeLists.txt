@@ -58,6 +58,8 @@ set(GAME_OBJECTS
 	src/game/GameObjects/iGameObject.cpp
 	src/game/GameObjects/BrickWall.h
 	src/game/GameObjects/BrickWall.cpp
+	src/game/GameObjects/BetonWall.h
+	src/game/GameObjects/BetonWall.cpp
 )
 
 # добавление файлов в проект

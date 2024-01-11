@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include "GameObjects/BrickWall.h"
+#include "GameObjects/BetonWall.h"
 
 const unsigned int BLOCK_SIZE = 16;
 
@@ -30,17 +31,17 @@ std::shared_ptr<IGameObjcect> CreateGameObjectFromDescription(const char descrip
         return std::make_shared<BrickWall>(BrickWall::EBrickWallType::TopLeft, position, size, rotation);
     case 'J':
         return std::make_shared<BrickWall>(BrickWall::EBrickWallType::TopRight, position, size, rotation);
-   /* case '5':
-        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Right, position, size, rotation, 0.f);
+    case '5':
+        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Right, position, size, rotation);
     case '6':
-        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Bottom, position, size, rotation, 0.f);
+        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Bottom, position, size, rotation);
     case '7':
-        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Left, position, size, rotation, 0.f);
+        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Left, position, size, rotation);
     case '8':
-        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Top, position, size, rotation, 0.f);
+        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Top, position, size, rotation);
     case '9':
-        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::All, position, size, rotation, 0.f);
-    case 'A':
+        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::All, position, size, rotation);
+    /*case 'A':
         return std::make_shared<Water>(position, size, rotation, 0.f);
     case 'B':
         return std::make_shared<Trees>(position, size, rotation, 1.f);
