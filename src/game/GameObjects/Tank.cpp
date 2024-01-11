@@ -1,11 +1,11 @@
-﻿#include "Tank.h"
+#include "Tank.h"
 
 #include "../../renderer/Sprite.h"
 #include "../../resources/ResourceManager.h"
 
 
-Tank::Tank(const float velocity, const glm::vec2& position, const glm::vec2& size)
-	: IGameObjcect(position, size, 0.f)
+Tank::Tank(const float velocity, const glm::vec2& position, const glm::vec2& size, const float layer)
+	: IGameObjcect(position, size, 0.f, layer)
 	, e_orientation_(EOrientation::Top)
 	, pSprite_top_(ResourceManager::GetSprite("player1_yellow_tank_type1_sprite_top"))
 	, pSprite_bottom_(ResourceManager::GetSprite("player1_yellow_tank_type1_sprite_bottom"))
@@ -26,16 +26,16 @@ void Tank::Render() const
 	switch (e_orientation_)
 	{
 	case Tank::EOrientation::Top:
-		pSprite_top_->Render(position_, size_, rotation_, spriteAnimator_top_.GetCurrentFrame());
+		pSprite_top_->Render(position_, size_, rotation_, layer_, spriteAnimator_top_.GetCurrentFrame());
 		break;
 	case Tank::EOrientation::Bottom:
-		pSprite_bottom_->Render(position_, size_, rotation_, spriteAnimator_bottom_.GetCurrentFrame());
+		pSprite_bottom_->Render(position_, size_, rotation_, layer_, spriteAnimator_bottom_.GetCurrentFrame());
 		break;
 	case Tank::EOrientation::Left:
-		pSprite_left_->Render(position_, size_, rotation_, spriteAnimator_left_.GetCurrentFrame());
+		pSprite_left_->Render(position_, size_, rotation_, layer_, spriteAnimator_left_.GetCurrentFrame());
 		break;
 	case Tank::EOrientation::Right:
-		pSprite_right_->Render(position_, size_, rotation_, spriteAnimator_right_.GetCurrentFrame());
+		pSprite_right_->Render(position_, size_, rotation_, layer_, spriteAnimator_right_.GetCurrentFrame());
 		break;
 	}
 	

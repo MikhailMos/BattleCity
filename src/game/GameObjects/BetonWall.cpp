@@ -3,8 +3,8 @@
 #include "../../resources/ResourceManager.h"
 #include "../../renderer/Sprite.h"
 
-BetonWall::BetonWall(const EBetonWallType eBetonWallType, const glm::vec2& position, const glm::vec2& size, const float rotation)
-	: IGameObjcect(position, size, rotation)
+BetonWall::BetonWall(const EBetonWallType eBetonWallType, const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer)
+	: IGameObjcect(position, size, rotation, layer)
 	, eCurrentBlockState_{ EBlockState::Destroyed, EBlockState::Destroyed, EBlockState::Destroyed, EBlockState::Destroyed }
     , sprite_(ResourceManager::GetSprite("betonWall"))
     , blockOffsets_{ glm::vec2(0, size_.y / 2.f),
@@ -56,7 +56,7 @@ void BetonWall::RenderBlock(const EBlockLocation eBlockLocation) const
     const EBlockState state = eCurrentBlockState_[static_cast<size_t>(eBlockLocation)];
     if (state != EBlockState::Destroyed)
     {
-        sprite_->Render(position_ + blockOffsets_[static_cast<size_t>(eBlockLocation)], size_ / 2.f, rotation_);
+        sprite_->Render(position_ + blockOffsets_[static_cast<size_t>(eBlockLocation)], size_ / 2.f, rotation_, layer_);
     }
 }
 

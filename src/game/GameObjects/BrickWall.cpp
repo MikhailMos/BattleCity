@@ -3,8 +3,8 @@
 #include "../../resources/ResourceManager.h"
 #include "../../renderer/Sprite.h"
 
-BrickWall::BrickWall(const EBrickWallType eBrickWallType, const glm::vec2& position, const glm::vec2& size, const float rotation)
-	: IGameObjcect(position, size, rotation)
+BrickWall::BrickWall(const EBrickWallType eBrickWallType, const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer)
+	: IGameObjcect(position, size, rotation, layer)
 	, eCurrentBrickState_{ EBrickState::Destroyed, EBrickState::Destroyed, EBrickState::Destroyed, EBrickState::Destroyed }
     , blockOffsets_{ glm::vec2(0, size_.y / 2.f),
                      glm::vec2(size_.x / 2.f, size_.y / 2.f),
@@ -70,7 +70,7 @@ void BrickWall::RenderBrick(const EBrickLocation eBrickLocation) const
     const EBrickState state = eCurrentBrickState_[static_cast<size_t>(eBrickLocation)];
     if (state != EBrickState::Destroyed)
     {
-        sprites_[static_cast<size_t>(state)]->Render(position_ + blockOffsets_[static_cast<size_t>(eBrickLocation)], size_ / 2.f, rotation_);
+        sprites_[static_cast<size_t>(state)]->Render(position_ + blockOffsets_[static_cast<size_t>(eBrickLocation)], size_ / 2.f, rotation_, layer_);
     }
 }
 

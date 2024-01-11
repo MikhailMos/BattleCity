@@ -1,4 +1,4 @@
-﻿#include "IndexBuffer.h"
+#include "IndexBuffer.h"
 
 namespace RenderEngine {
 

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "glad/glad.h"
 #include "glm/vec2.hpp"

@@ -19,15 +19,15 @@ public:
 	bool Init();
 
 private:
-	std::array<bool, 349> m_keys_; // нажатые клавиши
+	std::array<bool, 349> m_keys_; // РЅР°Р¶Р°С‚С‹Рµ РєР»Р°РІРёС€Рё
 
 	enum EGameState {
 		Active,
 		Pause
 	};
 
-	EGameState m_eCurrentGameState_; // текущее состояние игрового мира
-	glm::ivec2 m_windowSize_;		 // размер окна
-	std::unique_ptr<Tank> m_p_tank_; // игровой объект
-	std::unique_ptr<Level> m_p_level_; // уровень
+	EGameState m_eCurrentGameState_; // С‚РµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РёРіСЂРѕРІРѕРіРѕ РјРёСЂР°
+	glm::ivec2 m_windowSize_;		 // СЂР°Р·РјРµСЂ РѕРєРЅР°
+	std::unique_ptr<Tank> m_p_tank_; // РёРіСЂРѕРІРѕР№ РѕР±СЉРµРєС‚
+	std::unique_ptr<Level> m_p_level_; // СѓСЂРѕРІРµРЅСЊ
 };

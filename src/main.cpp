@@ -1,4 +1,4 @@
-﻿#include "glad/glad.h"
+#include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "glm/vec2.hpp"
 
@@ -92,6 +92,7 @@ int main(int argc, char** argv)
     std::cout << "OpenGL version: " << RenderEngine::Renderer::GetVersionStr() << std::endl;
 
     RenderEngine::Renderer::SetClearColor(0, 0, 0, 1);
+    RenderEngine::Renderer::SetDepthTest(true);
 
     {
         // создание шейдеров

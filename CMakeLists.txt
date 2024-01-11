@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
-# переменная имя проекта
+# РїРµСЂРµРјРµРЅРЅР°СЏ РёРјСЏ РїСЂРѕРµРєС‚Р°
 set(PROJECT_NAME BattleCity)
 
 project(${PROJECT_NAME} CXX)
 
-# компилировать под стандарт C++17
+# РєРѕРјРїРёР»РёСЂРѕРІР°С‚СЊ РїРѕРґ СЃС‚Р°РЅРґР°СЂС‚ C++17
 set(CMAKE_CXX_STANDARD 17)
 
-# переменные для файлов
+# РїРµСЂРµРјРµРЅРЅС‹Рµ РґР»СЏ С„Р°Р№Р»РѕРІ
 set(RENDERER 
 	src/renderer/ShaderProgram.h
 	src/renderer/ShaderProgram.cpp
@@ -70,7 +70,7 @@ set(GAME_OBJECTS
 	src/game/GameObjects/Eagle.cpp
 )
 
-# добавление файлов в проект
+# РґРѕР±Р°РІР»РµРЅРёРµ С„Р°Р№Р»РѕРІ РІ РїСЂРѕРµРєС‚
 add_executable(${PROJECT_NAME} 
 	src/main.cpp
 	${RENDERER}
@@ -82,30 +82,30 @@ add_executable(${PROJECT_NAME}
 	${GAME_OBJECTS}
 )
 
-# опции необходимые для GLFW
+# РѕРїС†РёРё РЅРµРѕР±С…РѕРґРёРјС‹Рµ РґР»СЏ GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 
-# подключаем библиотеку GLFW
+# РїРѕРґРєР»СЋС‡Р°РµРј Р±РёР±Р»РёРѕС‚РµРєСѓ GLFW
 add_subdirectory(external/glfw)
 target_link_libraries(${PROJECT_NAME} glfw)
 
-# подключаем библиотеку Glad
+# РїРѕРґРєР»СЋС‡Р°РµРј Р±РёР±Р»РёРѕС‚РµРєСѓ Glad
 add_subdirectory(external/glad)
 target_link_libraries(${PROJECT_NAME} glad)
 
-# включаем возможность инклюдировать функции glm в нашем проекте
+# РІРєР»СЋС‡Р°РµРј РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РёРЅРєР»СЋРґРёСЂРѕРІР°С‚СЊ С„СѓРЅРєС†РёРё glm РІ РЅР°С€РµРј РїСЂРѕРµРєС‚Рµ
 include_directories(external/glm)
 
-# подключаем библиотеку RapidJSON
+# РїРѕРґРєР»СЋС‡Р°РµРј Р±РёР±Р»РёРѕС‚РµРєСѓ RapidJSON
 include_directories(external/rapidjson/include)
 
-# Чтоб исполняемый файл в месте с ресурсами лежал отедльно
+# Р§С‚РѕР± РёСЃРїРѕР»РЅСЏРµРјС‹Р№ С„Р°Р№Р» РІ РјРµСЃС‚Рµ СЃ СЂРµСЃСѓСЂСЃР°РјРё Р»РµР¶Р°Р» РѕС‚РµРґР»СЊРЅРѕ
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)
 
-# скопировать файлы в папку bin
+# СЃРєРѕРїРёСЂРѕРІР°С‚СЊ С„Р°Р№Р»С‹ РІ РїР°РїРєСѓ bin
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_directory
 		${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)

@@ -201,7 +201,7 @@ bool ResourceManager::LoadJSONResources(const std::string& JSONPath)
 		return false;
 	}
 
-	// подгуражем шейдеры
+	// РїРѕРґРіСѓСЂР°Р¶РµРј С€РµР№РґРµСЂС‹
 	auto shaderIt = document.FindMember("shaders");
 	if (shaderIt != document.MemberEnd()) 
 	{
@@ -215,7 +215,7 @@ bool ResourceManager::LoadJSONResources(const std::string& JSONPath)
 		}
 	}
 
-	// подгружаем текстурные атласы
+	// РїРѕРґРіСЂСѓР¶Р°РµРј С‚РµРєСЃС‚СѓСЂРЅС‹Рµ Р°С‚Р»Р°СЃС‹
 	auto textureAtlasesIt = document.FindMember("textureAtlases");
 	if (textureAtlasesIt != document.MemberEnd())
 	{
@@ -239,7 +239,7 @@ bool ResourceManager::LoadJSONResources(const std::string& JSONPath)
 		}
 	}
 
-	// подгружаем статические объекты (спрайты)
+	// РїРѕРґРіСЂСѓР¶Р°РµРј СЃС‚Р°С‚РёС‡РµСЃРєРёРµ РѕР±СЉРµРєС‚С‹ (СЃРїСЂР°Р№С‚С‹)
 	auto spritesIt = document.FindMember("sprites");
 	if (spritesIt != document.MemberEnd())
 	{
@@ -277,7 +277,7 @@ bool ResourceManager::LoadJSONResources(const std::string& JSONPath)
 		}
 	}
 
-	// подгружаем текстурные уровня	
+	// РїРѕРґРіСЂСѓР¶Р°РµРј С‚РµРєСЃС‚СѓСЂРЅС‹Рµ СѓСЂРѕРІРЅСЏ	
 	auto levelsIt = document.FindMember("levels");
 	if (levelsIt != document.MemberEnd())
 	{
@@ -300,7 +300,7 @@ bool ResourceManager::LoadJSONResources(const std::string& JSONPath)
 			{
 				while (curretnRow.length() < maxLength)
 				{
-					curretnRow.append("F"); // F - пустое место на карте (start_screen_maping.png)
+					curretnRow.append("F"); // F - РїСѓСЃС‚РѕРµ РјРµСЃС‚Рѕ РЅР° РєР°СЂС‚Рµ (start_screen_maping.png)
 				}
 			}
 

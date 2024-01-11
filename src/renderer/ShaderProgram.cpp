@@ -7,14 +7,14 @@
 namespace RenderEngine {
 	ShaderProgram::ShaderProgram(const std::string& vertexShader, const std::string& fragmentShader)
 	{
-		// создание вертексного шейдера
+		// СЃРѕР·РґР°РЅРёРµ РІРµСЂС‚РµРєСЃРЅРѕРіРѕ С€РµР№РґРµСЂР°
 		GLuint vertexShaderID;
 		if (!CreateShader(vertexShader, GL_VERTEX_SHADER, vertexShaderID)) {
 			std::cerr << "VERTEX SHADER compile time error" << std::endl;
 			return;
 		}
 
-		// создание фрагментного шейдера
+		// СЃРѕР·РґР°РЅРёРµ С„СЂР°РіРјРµРЅС‚РЅРѕРіРѕ С€РµР№РґРµСЂР°
 		GLuint fragmentShaderID;
 		if (!CreateShader(fragmentShader, GL_FRAGMENT_SHADER, fragmentShaderID)) {
 			std::cerr << "FRAGMENT SHADER compile time error" << std::endl;
@@ -22,7 +22,7 @@ namespace RenderEngine {
 			return;
 		}
 
-		// создание ShaderProgram и линковка
+		// СЃРѕР·РґР°РЅРёРµ ShaderProgram Рё Р»РёРЅРєРѕРІРєР°
 		m_ID = glCreateProgram();
 		glAttachShader(m_ID, vertexShaderID);
 		glAttachShader(m_ID, fragmentShaderID);
@@ -41,7 +41,7 @@ namespace RenderEngine {
 			m_isCompiled = true;
 		}
 		
-		// удаляем шейдеры, т.к. они уже есть в ShaderProgram
+		// СѓРґР°Р»СЏРµРј С€РµР№РґРµСЂС‹, С‚.Рє. РѕРЅРё СѓР¶Рµ РµСЃС‚СЊ РІ ShaderProgram
 		glDeleteShader(vertexShaderID);
 		glDeleteShader(fragmentShaderID);
 	}
@@ -85,6 +85,11 @@ namespace RenderEngine {
 	void ShaderProgram::SetInt(const std::string& name, const GLint value)
 	{
 		glUniform1i(glGetUniformLocation(m_ID, name.c_str()), value);
+	}
+
+	void ShaderProgram::SetFoat(const std::string& name, const GLfloat value)
+	{
+		glUniform1f(glGetUniformLocation(m_ID, name.c_str()), value);
 	}
 
 	void ShaderProgram::SetMatrix4(const std::string& name, const glm::mat4& matrix)
