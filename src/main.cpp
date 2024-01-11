@@ -99,6 +99,8 @@ int main(int argc, char** argv)
         ResourceManager::SetExecutablePath(argv[0]);
         g_game->Init();
 
+        glfwSetWindowSize(pWindow, static_cast<int>(g_game->GetCurrentLevelWidth()), static_cast<int>(g_game->GetCurrentLevelHeight()));
+
         auto lastTime = std::chrono::high_resolution_clock::now();
 
         /* Loop until the user closes the window */

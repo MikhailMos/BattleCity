@@ -93,7 +93,7 @@ bool Game::Init()
     }
     
     // INITIALIZING LEVEL
-    m_p_level_ = std::make_unique<Level>(ResourceManager::GetLevels()[1]);
+    m_p_level_ = std::make_unique<Level>(ResourceManager::GetLevels()[0]);
     
     m_windowSize_.x = static_cast<int>(m_p_level_->GetLevelWidth());
     m_windowSize_.y = static_cast<int>(m_p_level_->GetLevelHeight());
@@ -105,7 +105,7 @@ bool Game::Init()
     pSpriteShaderProgram->SetMatrix4("projectionMat", projectionMatrix);
 
     // INITIALIZING TANK
-    m_p_tank_ = std::make_unique<Tank>(0.0000001f, glm::vec2(0), glm::vec2(16.f, 16.f), 0.f);
+    m_p_tank_ = std::make_unique<Tank>(0.0000001f, m_p_level_->GetPlayerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
 
     
 
