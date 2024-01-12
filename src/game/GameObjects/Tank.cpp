@@ -4,7 +4,7 @@
 #include "../../resources/ResourceManager.h"
 
 
-Tank::Tank(const double velocity, const glm::vec2& position, const glm::vec2& size, const float layer)
+Tank::Tank(const double maxVelocity, const glm::vec2& position, const glm::vec2& size, const float layer)
 	: IGameObjcect(position, size, 0.f, layer)
 	, e_orientation_(EOrientation::Top)
 	, pSprite_top_(ResourceManager::GetSprite("player1_yellow_tank_type1_sprite_top"))
@@ -19,9 +19,7 @@ Tank::Tank(const double velocity, const glm::vec2& position, const glm::vec2& si
 	, spriteAnimator_respawn_(pSprite_respawn_)
 	, pSprite_shield_(ResourceManager::GetSprite("shield"))
 	, spriteAnimator_shield_(pSprite_shield_)
-	, move_(false)
-	, velocity_(velocity)
-	, move_offset_(glm::vec2(0.f, 1.f))
+	, maxVelocity_(maxVelocity)
 	, isSpawning_(true)
 	, hasShield_(false)
 {
@@ -67,7 +65,7 @@ void Tank::Render() const
 		}
 
 		if (hasShield_) {
-			pSprite_shield_->Render(position_, size_, rotation_, layer_, spriteAnimator_shield_.GetCurrentFrame());
+			pSprite_shield_->Render(position_, size_, rotation_, layer_ + 0.1f, spriteAnimator_shield_.GetCurrentFrame());
 		}
 	}
 	
@@ -84,29 +82,24 @@ void Tank::SetOrientation(const EOrientation eOrientation)
 	switch (e_orientation_)
 	{
 	case Tank::EOrientation::Top:
-		move_offset_.x = 0.f;
-		move_offset_.y = 1.f;
+		direction_.x = 0.f;
+		direction_.y = 1.f;
 		break;
 	case Tank::EOrientation::Bottom:
-		move_offset_.x = 0.f;
-		move_offset_.y = -1.f;
+		direction_.x = 0.f;
+		direction_.y = -1.f;
 		break;
 	case Tank::EOrientation::Left:
-		move_offset_.x = -1.f;
-		move_offset_.y = 0.f;
+		direction_.x = -1.f;
+		direction_.y = 0.f;
 		break;
 	case Tank::EOrientation::Right:
-		move_offset_.x = 1.f;
-		move_offset_.y = 0.f;
+		direction_.x = 1.f;
+		direction_.y = 0.f;
 		break;
 	default:
 		break;
 	}
-}
-
-void Tank::Move(const bool move)
-{
-	move_ = move;
 }
 
 void Tank::Update(const double delta)
@@ -124,11 +117,8 @@ void Tank::Update(const double delta)
 			shieldTimer_.Update(delta);
 		}
 
-		if (move_)
+		if (velocity_ > 0)
 		{
-			position_.x += static_cast<float>(delta * velocity_ * move_offset_.x);
-			position_.y += static_cast<float>(delta * velocity_ * move_offset_.y);
-
 			switch (e_orientation_)
 			{
 			case Tank::EOrientation::Top:
@@ -148,4 +138,17 @@ void Tank::Update(const double delta)
 		}
 	}
 	
+}
+
+double Tank::GetMaxVelocity() const
+{
+	return maxVelocity_;
+}
+
+void Tank::SetVelocity(const double velocity)
+{
+	if (!isSpawning_)
+	{
+		velocity_ = velocity;
+	}	
 }

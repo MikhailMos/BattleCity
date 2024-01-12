@@ -9,6 +9,7 @@
 #include "game/Game.h"
 #include "resources/ResourceManager.h"
 #include "renderer/Renderer.h"
+#include "physics/PhysicsEngine.h"
 
 const int LEVEL_WIDHT = 13;
 const int LEVEL_HEIGHT = 14;
@@ -97,6 +98,10 @@ int main(int argc, char** argv)
     {
         // создание шейдеров
         ResourceManager::SetExecutablePath(argv[0]);
+        
+        // инициализируем физику
+        PhysicsEngine::Init();
+        // инициализируем игру
         g_game->Init();
 
         glfwSetWindowSize(pWindow, static_cast<int>(3 * g_game->GetCurrentLevelWidth()), static_cast<int>(3 * g_game->GetCurrentLevelHeight()));
@@ -115,6 +120,7 @@ int main(int argc, char** argv)
             lastTime = currentTime;
 
             g_game->Update(duration);
+            PhysicsEngine::Update(duration);
             
             /* Render here */
             // очищаем экран

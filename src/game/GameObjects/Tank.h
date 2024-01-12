@@ -11,7 +11,7 @@ namespace RenderEngine {
 	class Sprite;
 }
 
-class Tank : IGameObjcect {
+class Tank : public IGameObjcect {
 public:
 	enum class EOrientation {
 		Top,
@@ -20,15 +20,16 @@ public:
 		Right
 	};
 
-	Tank(const double velocity, 
+	Tank(const double maxVelocity,
 		const glm::vec2& position, 
 		const glm::vec2& size,
 		const float layer);
 
 	void Render() const override;
 	void SetOrientation(const EOrientation eOrientation);
-	void Move(const bool move);
 	void Update(const double delta) override;
+	double GetMaxVelocity() const;
+	void SetVelocity(const double velocity) override;
 
 private:
 	EOrientation e_orientation_;
@@ -50,9 +51,7 @@ private:
 	Timer respawnTimer_;
 	Timer shieldTimer_;
 
-	bool move_;
-	double velocity_; // скорость танка
-	glm::vec2 move_offset_; // вектор направления танка
+	double maxVelocity_; // скорость танка
 	bool isSpawning_;
 	bool hasShield_;
 

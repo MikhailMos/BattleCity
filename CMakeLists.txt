@@ -77,6 +77,11 @@ set(GAME_SYSTEM
 	src/game_system/Timer.cpp
 )
 
+set(PHYSICS
+	src/physics/PhysicsEngine.h
+	src/physics/PhysicsEngine.cpp
+)
+
 # добавление файлов в проект
 add_executable(${PROJECT_NAME} 
 	src/main.cpp
@@ -88,6 +93,7 @@ add_executable(${PROJECT_NAME}
 	${GAME}
 	${GAME_OBJECTS}
 	${GAME_SYSTEM}
+	${PHYSICS}
 )
 
 # опции необходимые для GLFW
