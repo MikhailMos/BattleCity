@@ -13,7 +13,7 @@ public:
 
 	Level(const std::vector<std::string>& levelDescription);
 	void Render() const;
-	void Update(const uint64_t delta);
+	void Update(const double delta);
 	size_t GetLevelWidth() const;
 	size_t GetLevelHeight() const;
 

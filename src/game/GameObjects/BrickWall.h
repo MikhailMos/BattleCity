@@ -53,7 +53,7 @@ public:
 
 	BrickWall(const EBrickWallType eBrickWallType, const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer);
 	virtual void Render() const override;
-	virtual void Update(const uint64_t delta) override;
+	virtual void Update(const double delta) override;
 
 private:
     std::array<EBrickState, 4> eCurrentBrickState_;

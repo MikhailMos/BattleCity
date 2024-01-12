@@ -14,7 +14,7 @@ public:
 	~Game();
 
 	void Render();
-	void Update(const uint64_t delta);
+	void Update(const double delta);
 	void SetKey(const int key, const int action);
 	bool Init();
 	size_t GetCurrentLevelWidth() const;

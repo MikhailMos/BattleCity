@@ -99,7 +99,7 @@ int main(int argc, char** argv)
         ResourceManager::SetExecutablePath(argv[0]);
         g_game->Init();
 
-        glfwSetWindowSize(pWindow, static_cast<int>(g_game->GetCurrentLevelWidth()), static_cast<int>(g_game->GetCurrentLevelHeight()));
+        glfwSetWindowSize(pWindow, static_cast<int>(3 * g_game->GetCurrentLevelWidth()), static_cast<int>(3 * g_game->GetCurrentLevelHeight()));
 
         auto lastTime = std::chrono::high_resolution_clock::now();
 
@@ -111,7 +111,7 @@ int main(int argc, char** argv)
             
             /* Обновляем все объекты, которые есть в игровом мире */
             auto currentTime = std::chrono::high_resolution_clock::now();
-            uint64_t duration = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - lastTime).count();
+            double duration = std::chrono::duration<double, std::milli>(currentTime - lastTime).count();
             lastTime = currentTime;
 
             g_game->Update(duration);

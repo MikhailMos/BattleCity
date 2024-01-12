@@ -72,6 +72,11 @@ set(GAME_OBJECTS
 	src/game/GameObjects/Border.cpp
 )
 
+set(GAME_SYSTEM
+	src/game_system/Timer.h
+	src/game_system/Timer.cpp
+)
+
 # добавление файлов в проект
 add_executable(${PROJECT_NAME} 
 	src/main.cpp
@@ -82,6 +87,7 @@ add_executable(${PROJECT_NAME}
 	${LOAD_IMAGE}
 	${GAME}
 	${GAME_OBJECTS}
+	${GAME_SYSTEM}
 )
 
 # опции необходимые для GLFW

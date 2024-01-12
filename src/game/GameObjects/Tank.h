@@ -5,6 +5,7 @@
 
 #include "iGameObject.h"
 #include "../../renderer/SpriteAnimator.h"
+#include "../../game_system/Timer.h"
 
 namespace RenderEngine {
 	class Sprite;
@@ -19,7 +20,7 @@ public:
 		Right
 	};
 
-	Tank(const float velocity, 
+	Tank(const double velocity, 
 		const glm::vec2& position, 
 		const glm::vec2& size,
 		const float layer);
@@ -27,7 +28,7 @@ public:
 	void Render() const override;
 	void SetOrientation(const EOrientation eOrientation);
 	void Move(const bool move);
-	void Update(const uint64_t delta) override;
+	void Update(const double delta) override;
 
 private:
 	EOrientation e_orientation_;
@@ -39,9 +40,20 @@ private:
 	RenderEngine::SpriteAnimator spriteAnimator_bottom_;
 	RenderEngine::SpriteAnimator spriteAnimator_left_;
 	RenderEngine::SpriteAnimator spriteAnimator_right_;
+
+	std::shared_ptr<RenderEngine::Sprite> pSprite_respawn_;
+	RenderEngine::SpriteAnimator spriteAnimator_respawn_;
+
+	std::shared_ptr<RenderEngine::Sprite> pSprite_shield_;
+	RenderEngine::SpriteAnimator spriteAnimator_shield_;
 	
+	Timer respawnTimer_;
+	Timer shieldTimer_;
+
 	bool move_;
-	float velocity_; // скорость танка
+	double velocity_; // скорость танка
 	glm::vec2 move_offset_; // вектор направления танка
+	bool isSpawning_;
+	bool hasShield_;
 
 };

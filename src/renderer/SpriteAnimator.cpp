@@ -16,7 +16,7 @@ namespace RenderEngine {
 		return current_frame_;
 	}
 
-	void SpriteAnimator::Update(const uint64_t delta)
+	void SpriteAnimator::Update(const double delta)
 	{
 		current_animation_time_ += delta;
 

@@ -16,6 +16,6 @@ void Eagle::Render() const
     sprites_[static_cast<size_t>(eCurrentState_)]->Render(position_, size_, rotation_, layer_);
 }
 
-void Eagle::Update(const uint64_t delta)
+void Eagle::Update(const double delta)
 {
 }

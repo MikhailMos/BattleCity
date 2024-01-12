@@ -20,7 +20,7 @@ public:
 
 	Eagle(const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer);
 	virtual void Render() const override;
-	void Update(const uint64_t delta) override;
+	void Update(const double delta) override;
 
 private:
 	std::array<std::shared_ptr<RenderEngine::Sprite>, 2> sprites_;

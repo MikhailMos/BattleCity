@@ -28,7 +28,7 @@ void Water::Render() const
     RenderBlock(EBlockLocation::BottomRight);
 }
 
-void Water::Update(const uint64_t delta)
+void Water::Update(const double delta)
 {
     spriteAnimator_.Update(delta);
 }
