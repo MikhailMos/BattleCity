@@ -30,7 +30,6 @@ public:
 	void Update(const double delta) override;
 	bool IsActive() const;
 	void Fire(const glm::vec2& position, const glm::vec2& direction);
-	void OnCollision() override;
 
 private:
 	EOrientation e_orientation_;

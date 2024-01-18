@@ -40,7 +40,7 @@ const glm::vec2& IGameObject::GetSize() const
 	return size_;
 }
 
-const std::vector<Physics::AABB>& IGameObject::GetColliders() const
+const std::vector<Physics::Collider>& IGameObject::GetColliders() const
 {
 	return colliders_;
 }

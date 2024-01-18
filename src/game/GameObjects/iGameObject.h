@@ -31,7 +31,7 @@ public:
 	virtual void SetVelocity(const double velocity);
 
 	const glm::vec2& GetSize() const;
-	const std::vector<Physics::AABB>& GetColliders() const;
+	const std::vector<Physics::Collider>& GetColliders() const;
 	EObjectType GetObjectType() const;
 	virtual bool Collides(const EObjectType objectType);
 	virtual void OnCollision() {}
@@ -45,5 +45,5 @@ protected:
 
 	glm::vec2 direction_;	// вектор направления
 	double velocity_;		// скорость
-	std::vector<Physics::AABB> colliders_;
+	std::vector<Physics::Collider> colliders_;
 };
