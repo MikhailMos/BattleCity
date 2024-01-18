@@ -9,7 +9,7 @@ namespace RenderEngine {
 	class Sprite;
 }
 
-class Border : public IGameObjcect
+class Border : public IGameObject
 {
 public:
 

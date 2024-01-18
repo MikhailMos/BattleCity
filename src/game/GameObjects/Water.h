@@ -10,7 +10,7 @@ namespace RenderEngine {
 	class Sprite;
 }
 
-class Water : public IGameObjcect
+class Water : public IGameObject
 {
 public:
 
@@ -24,6 +24,7 @@ public:
     Water(const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer);
     virtual void Render() const override;
     void Update(const double delta) override;
+    virtual bool Collides(const EObjectType objectType) override;
 
 private:
     std::shared_ptr<RenderEngine::Sprite> sprite_;

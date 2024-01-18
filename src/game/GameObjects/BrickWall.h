@@ -9,7 +9,7 @@ namespace RenderEngine {
 	class Sprite;
 }
 
-class BrickWall : public IGameObjcect
+class BrickWall : public IGameObject
 {
 public:
 

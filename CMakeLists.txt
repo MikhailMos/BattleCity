@@ -70,6 +70,8 @@ set(GAME_OBJECTS
 	src/game/GameObjects/Eagle.cpp
 	src/game/GameObjects/Border.h
 	src/game/GameObjects/Border.cpp
+	src/game/GameObjects/Bullet.h
+	src/game/GameObjects/Bullet.cpp
 )
 
 set(GAME_SYSTEM

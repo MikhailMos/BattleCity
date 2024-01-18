@@ -6,6 +6,8 @@
 #include "../renderer/Sprite.h"
 
 #include "GameObjects/Tank.h"
+#include "GameObjects/Bullet.h"
+
 #include "Level.h"
 #include "../physics/PhysicsEngine.h"
 
@@ -73,6 +75,11 @@ void Game::Update(const double delta)
             m_p_tank_->SetVelocity(0);
         }
 
+        if (m_p_tank_ && m_keys_[GLFW_KEY_SPACE])
+        {
+            m_p_tank_->Fire();
+        }
+
         m_p_tank_->Update(delta);
     }
 }
@@ -99,6 +106,8 @@ bool Game::Init()
     m_windowSize_.x = static_cast<int>(m_p_level_->GetLevelWidth());
     m_windowSize_.y = static_cast<int>(m_p_level_->GetLevelHeight());
 
+    Physics::PhysicsEngine::SetCurrentLevel(m_p_level_);
+
     glm::mat4 projectionMatrix = glm::ortho(0.f, static_cast<float>(m_windowSize_.x), 0.f, static_cast<float>(m_windowSize_.y), -100.f, 100.f);
 
     pSpriteShaderProgram->Use();
@@ -108,7 +117,7 @@ bool Game::Init()
     // INITIALIZING TANK
     m_p_tank_ = std::make_shared<Tank>(0.05, m_p_level_->GetPlayerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
 
-    PhysicsEngine::AddDynamicGameObject(m_p_tank_);
+    Physics::PhysicsEngine::AddDynamicGameObject(m_p_tank_);
 
     return true;
 }

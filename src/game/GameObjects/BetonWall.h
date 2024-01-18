@@ -9,7 +9,7 @@ namespace RenderEngine {
 	class Sprite;
 }
 
-class BetonWall : public IGameObjcect
+class BetonWall : public IGameObject
 {
 public:
 

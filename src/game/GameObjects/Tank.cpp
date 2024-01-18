@@ -2,11 +2,14 @@
 
 #include "../../renderer/Sprite.h"
 #include "../../resources/ResourceManager.h"
+#include "../../physics/PhysicsEngine.h"
+#include "Bullet.h"
 
 
 Tank::Tank(const double maxVelocity, const glm::vec2& position, const glm::vec2& size, const float layer)
-	: IGameObjcect(position, size, 0.f, layer)
+	: IGameObject(IGameObject::EObjectType::Tank, position, size, 0.f, layer)
 	, e_orientation_(EOrientation::Top)
+	, pCurrentBullet_(std::make_shared<Bullet>(0.1, position_ + size_ / 4.f, size_ / 2.f, size_, layer))
 	, pSprite_top_(ResourceManager::GetSprite("player1_yellow_tank_type1_sprite_top"))
 	, pSprite_bottom_(ResourceManager::GetSprite("player1_yellow_tank_type1_sprite_bottom"))
 	, pSprite_left_(ResourceManager::GetSprite("player1_yellow_tank_type1_sprite_left"))
@@ -23,7 +26,7 @@ Tank::Tank(const double maxVelocity, const glm::vec2& position, const glm::vec2&
 	, isSpawning_(true)
 	, hasShield_(false)
 {
-	respawnTimer_.SetCalback([&]()
+	respawnTimer_.SetCallback([&]()
 		{
 			isSpawning_ = false;
 			hasShield_ = true;
@@ -31,13 +34,16 @@ Tank::Tank(const double maxVelocity, const glm::vec2& position, const glm::vec2&
 		}
 	);
 
-	shieldTimer_.SetCalback([&]()
+	shieldTimer_.SetCallback([&]()
 		{
 			hasShield_ = false;			
 		}
 	);
 
 	respawnTimer_.Start(1500);
+
+	colliders_.emplace_back(glm::vec2(0), size_);
+	Physics::PhysicsEngine::AddDynamicGameObject(pCurrentBullet_);
 }
 
 void Tank::Render() const
@@ -69,6 +75,11 @@ void Tank::Render() const
 		}
 	}
 	
+	if (pCurrentBullet_->IsActive())
+	{
+		pCurrentBullet_->Render();
+	}
+
 }
 
 void Tank::SetOrientation(const EOrientation eOrientation)
@@ -97,13 +108,16 @@ void Tank::SetOrientation(const EOrientation eOrientation)
 		direction_.x = 1.f;
 		direction_.y = 0.f;
 		break;
-	default:
-		break;
 	}
 }
 
 void Tank::Update(const double delta)
 {
+	if (pCurrentBullet_->IsActive())
+	{
+		pCurrentBullet_->Update(delta);
+	}
+	
 	if (isSpawning_) 
 	{
 		spriteAnimator_respawn_.Update(delta);
@@ -151,4 +165,12 @@ void Tank::SetVelocity(const double velocity)
 	{
 		velocity_ = velocity;
 	}	
+}
+
+void Tank::Fire()
+{
+	if (!isSpawning_ && !pCurrentBullet_->IsActive())
+	{
+		pCurrentBullet_->Fire(position_ + size_ / 4.f + size_ * direction_ / 4.f, direction_);
+	}
 }

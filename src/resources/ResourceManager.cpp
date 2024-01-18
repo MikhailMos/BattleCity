@@ -300,7 +300,7 @@ bool ResourceManager::LoadJSONResources(const std::string& JSONPath)
 			{
 				while (curretnRow.length() < maxLength)
 				{
-					curretnRow.append("F"); // F - пустое место на карте (start_screen_maping.png)
+					curretnRow.append("D"); // пустое место на карте
 				}
 			}
 

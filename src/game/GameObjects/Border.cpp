@@ -4,9 +4,10 @@
 #include "../../renderer/Sprite.h"
 
 Border::Border(const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer)
-	: IGameObjcect(position, size, rotation, layer)
+	: IGameObject(IGameObject::EObjectType::Border, position, size, rotation, layer)
     , sprite_(ResourceManager::GetSprite("border"))
 {
+    colliders_.emplace_back(glm::vec2(0), size_);
 }
 
 void Border::Render() const

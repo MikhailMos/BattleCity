@@ -4,7 +4,7 @@
 #include "../../renderer/Sprite.h"
 
 BrickWall::BrickWall(const EBrickWallType eBrickWallType, const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer)
-	: IGameObjcect(position, size, rotation, layer)
+	: IGameObject(IGameObject::EObjectType::BrickWall, position, size, rotation, layer)
 	, eCurrentBrickState_{ EBrickState::Destroyed, EBrickState::Destroyed, EBrickState::Destroyed, EBrickState::Destroyed }
     , blockOffsets_{ glm::vec2(0, size_.y / 2.f),
                      glm::vec2(size_.x / 2.f, size_.y / 2.f),
@@ -32,34 +32,43 @@ BrickWall::BrickWall(const EBrickWallType eBrickWallType, const glm::vec2& posit
     {
     case EBrickWallType::All:
         eCurrentBrickState_.fill(EBrickState::All);
+        colliders_.emplace_back(glm::vec2(0), size_);
         break;
     case EBrickWallType::Top:
         eCurrentBrickState_[static_cast<size_t>(EBrickLocation::TopLeft)]  = EBrickState::All;
         eCurrentBrickState_[static_cast<size_t>(EBrickLocation::TopRight)] = EBrickState::All;
+        colliders_.emplace_back(glm::vec2(0, size_.y / 2), size_);
         break;
     case EBrickWallType::Bottom:
         eCurrentBrickState_[static_cast<size_t>(EBrickLocation::BottomLeft)]  = EBrickState::All;
         eCurrentBrickState_[static_cast<size_t>(EBrickLocation::BottomRight)] = EBrickState::All;
+        colliders_.emplace_back(glm::vec2(0), glm::vec2(size_.x / 2, size_.y / 2));
         break;
     case EBrickWallType::Left:
         eCurrentBrickState_[static_cast<size_t>(EBrickLocation::TopLeft)]    = EBrickState::All;
         eCurrentBrickState_[static_cast<size_t>(EBrickLocation::BottomLeft)] = EBrickState::All;
+        colliders_.emplace_back(glm::vec2(0), glm::vec2(size_.x / 2, size_.y));
         break;
     case EBrickWallType::Right:
         eCurrentBrickState_[static_cast<size_t>(EBrickLocation::TopRight)]    = EBrickState::All;
         eCurrentBrickState_[static_cast<size_t>(EBrickLocation::BottomRight)] = EBrickState::All;
+        colliders_.emplace_back(glm::vec2(size_.x / 2, 0), size_);
         break;
     case EBrickWallType::TopLeft:
         eCurrentBrickState_[static_cast<size_t>(EBrickLocation::TopLeft)] = EBrickState::All;
+        colliders_.emplace_back(glm::vec2(0, size_.y /2), glm::vec2(size_.x / 2, size_.y));
         break;
     case EBrickWallType::TopRight:
         eCurrentBrickState_[static_cast<size_t>(EBrickLocation::TopRight)] = EBrickState::All;
+        colliders_.emplace_back(glm::vec2(size_.x / 2, size_.y / 2), size_);
         break;
     case EBrickWallType::BottomLeft:
         eCurrentBrickState_[static_cast<size_t>(EBrickLocation::BottomLeft)] = EBrickState::All;
+        colliders_.emplace_back(glm::vec2(0), glm::vec2(size_.x / 2, size_.y / 2));
         break;
     case EBrickWallType::BottomRight:
         eCurrentBrickState_[static_cast<size_t>(EBrickLocation::BottomRight)] = EBrickState::All;
+        colliders_.emplace_back(glm::vec2(size_.x / 2, 0), glm::vec2(size_.x, size_.y / 2));
         break;
     
     }

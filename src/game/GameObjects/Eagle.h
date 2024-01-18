@@ -9,7 +9,7 @@ namespace RenderEngine {
 	class Sprite;
 }
 
-class Eagle : public IGameObjcect
+class Eagle : public IGameObject
 {
 public:
 

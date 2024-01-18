@@ -11,7 +11,9 @@ namespace RenderEngine {
 	class Sprite;
 }
 
-class Tank : public IGameObjcect {
+class Bullet;
+
+class Tank : public IGameObject {
 public:
 	enum class EOrientation {
 		Top,
@@ -30,9 +32,11 @@ public:
 	void Update(const double delta) override;
 	double GetMaxVelocity() const;
 	void SetVelocity(const double velocity) override;
+	void Fire();
 
 private:
 	EOrientation e_orientation_;
+	std::shared_ptr<Bullet> pCurrentBullet_;
 	std::shared_ptr<RenderEngine::Sprite> pSprite_top_;
 	std::shared_ptr<RenderEngine::Sprite> pSprite_bottom_;
 	std::shared_ptr<RenderEngine::Sprite> pSprite_left_;

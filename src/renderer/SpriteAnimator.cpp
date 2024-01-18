@@ -8,7 +8,12 @@ namespace RenderEngine {
 		, current_frame_(0)
 		, current_frame_duration_(pSprite_->GetFrameDuration(0))
 		, current_animation_time_(0)
+		, total_duration_(0)
 	{
+		for (size_t currentFrameId = 0; currentFrameId < pSprite_->GetFramesCount(); ++currentFrameId)
+		{
+			total_duration_ += pSprite_->GetFrameDuration(currentFrameId);
+		}
 	}
 
 	size_t SpriteAnimator::GetCurrentFrame() const
@@ -31,5 +36,17 @@ namespace RenderEngine {
 
 			current_frame_duration_ = pSprite_->GetFrameDuration(current_frame_);
 		}
+	}
+
+	double SpriteAnimator::GetTotalDuration() const
+	{
+		return total_duration_;
+	}
+
+	void SpriteAnimator::Reset()
+	{
+		current_frame_ = 0;
+		current_frame_duration_ = pSprite_->GetFrameDuration(0);
+		current_animation_time_ = 0;
 	}
 }

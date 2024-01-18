@@ -3,6 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <algorithm>
 
 #include "GameObjects/BrickWall.h"
 #include "GameObjects/BetonWall.h"
@@ -13,7 +14,7 @@
 #include "GameObjects/Border.h"
 
 
-std::shared_ptr<IGameObjcect> CreateGameObjectFromDescription(const char description, const glm::vec2& position, const glm::vec2& size, const float rotation)
+std::shared_ptr<IGameObject> CreateGameObjectFromDescription(const char description, const glm::vec2& position, const glm::vec2& size, const float rotation)
 {
 	switch (description)
 	{
@@ -69,17 +70,19 @@ Level::Level(const std::vector<std::string>& levelDescription)
 		std::cerr << "Empty level description!" << std::endl;
 	}
 
-	width_ = levelDescription[0].length();
-	height_ = levelDescription.size();
+	widthBlocks_  = levelDescription[0].length();
+	heightBlocks_ = levelDescription.size();
+    widthPixels_  = static_cast<unsigned int>(widthBlocks_ * BLOCK_SIZE);
+    heightPixels_ = static_cast<unsigned int>(heightBlocks_ * BLOCK_SIZE);
 
-    playerRespawn_1_ = { BLOCK_SIZE * (width_ / 2 - 1), BLOCK_SIZE / 2 };
-    playerRespawn_1_ = { BLOCK_SIZE * (width_ / 2 + 3), BLOCK_SIZE / 2 };
-    enemyRespawn_1_  = { BLOCK_SIZE,                      (height_ * BLOCK_SIZE) - BLOCK_SIZE / 2 };
-    enemyRespawn_2_  = { BLOCK_SIZE * (width_ / 2 + 1), (height_ * BLOCK_SIZE) - BLOCK_SIZE / 2 };
-    enemyRespawn_3_  = { BLOCK_SIZE * width_,             (height_ * BLOCK_SIZE) - BLOCK_SIZE / 2 };
+    playerRespawn_1_ = { BLOCK_SIZE * (widthBlocks_ / 2 - 1), BLOCK_SIZE / 2 };
+    playerRespawn_2_ = { BLOCK_SIZE * (widthBlocks_ / 2 + 3), BLOCK_SIZE / 2 };
+    enemyRespawn_1_  = { BLOCK_SIZE,                          (heightBlocks_ * BLOCK_SIZE) - BLOCK_SIZE / 2 };
+    enemyRespawn_2_  = { BLOCK_SIZE * (widthBlocks_ / 2 + 1), (heightBlocks_ * BLOCK_SIZE) - BLOCK_SIZE / 2 };
+    enemyRespawn_3_  = { BLOCK_SIZE * widthBlocks_,           (heightBlocks_ * BLOCK_SIZE) - BLOCK_SIZE / 2 };
 
-	mapObjects_.reserve(width_ * height_ + 4); // 4 - границы
-	unsigned int currentBottomOffset = static_cast<unsigned int>(BLOCK_SIZE * (height_ - 1) + BLOCK_SIZE / 2.f);
+	mapObjects_.reserve(widthBlocks_ * heightBlocks_ + 4); // 4 - границы
+	unsigned int currentBottomOffset = static_cast<unsigned int>(BLOCK_SIZE * (heightBlocks_ - 1) + BLOCK_SIZE / 2.f);
 
 	for (const std::string& currentRow : levelDescription)
 	{
@@ -91,18 +94,23 @@ Level::Level(const std::vector<std::string>& levelDescription)
             {
             case 'K':
                 playerRespawn_1_ = { currentLeftOffset, currentBottomOffset };
+                mapObjects_.emplace_back(nullptr);
                 break;
             case 'L':
                 playerRespawn_2_ = { currentLeftOffset, currentBottomOffset };
+                mapObjects_.emplace_back(nullptr);
                 break;
             case 'M':
                 enemyRespawn_1_ = { currentLeftOffset, currentBottomOffset };
+                mapObjects_.emplace_back(nullptr);
                 break;
             case 'N':
                 enemyRespawn_2_ = { currentLeftOffset, currentBottomOffset };
+                mapObjects_.emplace_back(nullptr);
                 break;
             case 'O':
                 enemyRespawn_3_ = { currentLeftOffset, currentBottomOffset };
+                mapObjects_.emplace_back(nullptr);
                 break;
             default:
                 mapObjects_.emplace_back(CreateGameObjectFromDescription(currentElement, glm::vec2(currentLeftOffset, currentBottomOffset), glm::vec2(BLOCK_SIZE, BLOCK_SIZE), 0.f));
@@ -116,16 +124,16 @@ Level::Level(const std::vector<std::string>& levelDescription)
 	}
 
     // bottom border
-    mapObjects_.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, 0.f), glm::vec2(width_ * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
+    mapObjects_.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, 0.f), glm::vec2(widthBlocks_ * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
 
     // top border
-    mapObjects_.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, height_ * BLOCK_SIZE + BLOCK_SIZE / 2.f), glm::vec2(width_ * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
+    mapObjects_.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, heightBlocks_ * BLOCK_SIZE + BLOCK_SIZE / 2.f), glm::vec2(widthBlocks_ * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
 
     // left border
-    mapObjects_.emplace_back(std::make_shared<Border>(glm::vec2(0.f, 0.f), glm::vec2(BLOCK_SIZE, (height_ + 1) * BLOCK_SIZE), 0.f, 0.f));
+    mapObjects_.emplace_back(std::make_shared<Border>(glm::vec2(0.f, 0.f), glm::vec2(BLOCK_SIZE, (heightBlocks_ + 1) * BLOCK_SIZE), 0.f, 0.f));
 
     // right border
-    mapObjects_.emplace_back(std::make_shared<Border>(glm::vec2((width_ + 1) * BLOCK_SIZE, 0.f), glm::vec2(BLOCK_SIZE * 2.f, (height_ + 1) * BLOCK_SIZE), 0.f, 0.f));
+    mapObjects_.emplace_back(std::make_shared<Border>(glm::vec2((widthBlocks_ + 1) * BLOCK_SIZE, 0.f), glm::vec2(BLOCK_SIZE * 2.f, (heightBlocks_ + 1) * BLOCK_SIZE), 0.f, 0.f));
 }
 
 void Level::Render() const
@@ -152,12 +160,12 @@ void Level::Update(const double delta)
 
 size_t Level::GetLevelWidth() const
 {
-    return (width_ + 3) * BLOCK_SIZE;
+    return (widthBlocks_ + 3) * BLOCK_SIZE;
 }
 
 size_t Level::GetLevelHeight() const
 {
-    return (height_ + 1) * BLOCK_SIZE;
+    return (heightBlocks_ + 1) * BLOCK_SIZE;
 }
 
 const glm::ivec2& Level::GetPlayerRespawn_1() const
@@ -183,4 +191,55 @@ const glm::ivec2& Level::GetEnemyRespawn_2() const
 const glm::ivec2& Level::GetEnemyRespawn_3() const
 {
     return enemyRespawn_3_;
+}
+
+std::vector<std::shared_ptr<IGameObject>> Level::GetObjectsInArea(const glm::vec2& bottomLeft, glm::vec2& tomRight)
+{
+    std::vector<std::shared_ptr<IGameObject>> output;
+    output.reserve(9);
+    
+    glm::vec2 bottomLeft_converted(std::clamp(bottomLeft.x - BLOCK_SIZE, 0.f, static_cast<float>(widthPixels_)), 
+                                   std::clamp(heightPixels_ - bottomLeft.y + BLOCK_SIZE / 2, 0.f, static_cast<float>(heightPixels_)));
+    glm::vec2 topRight_converted(std::clamp(tomRight.x - BLOCK_SIZE, 0.f, static_cast<float>(widthPixels_)),
+                                 std::clamp(heightPixels_ - tomRight.y + BLOCK_SIZE / 2, 0.f, static_cast<float>(heightPixels_)));
+
+    size_t startX = static_cast<size_t>(floor(bottomLeft_converted.x / BLOCK_SIZE));
+    size_t endX   = static_cast<size_t>(ceil(topRight_converted.x    / BLOCK_SIZE));
+
+    size_t startY = static_cast<size_t>(floor(topRight_converted.y  / BLOCK_SIZE));
+    size_t endY   = static_cast<size_t>(ceil(bottomLeft_converted.y / BLOCK_SIZE));
+
+    for (size_t currentColumn = startX; currentColumn < endX; ++currentColumn)
+    {
+        for (size_t currentRow = startY; currentRow < endY; ++currentRow)
+        {
+            auto& currentObject = mapObjects_[currentRow * widthBlocks_ + currentColumn];
+            if (currentObject) 
+            {
+                output.push_back(currentObject);
+            }
+        }
+    }
+    // вставляем границы карты
+    if (endX >= widthBlocks_)
+    {
+        output.push_back(mapObjects_[mapObjects_.size() - 1]);
+    }
+
+    if (startX <= 1)
+    {
+        output.push_back(mapObjects_[mapObjects_.size() - 2]);
+    }
+
+    if (startY <= 1)
+    {
+        output.push_back(mapObjects_[mapObjects_.size() - 3]);
+    }
+
+    if (endY >= heightBlocks_)
+    {
+        output.push_back(mapObjects_[mapObjects_.size() - 4]);
+    }
+
+    return output;
 }

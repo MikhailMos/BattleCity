@@ -5,7 +5,7 @@
 #include <memory>
 #include <glm/vec2.hpp>
 
-class IGameObjcect;
+class IGameObject;
 
 class Level {
 public:
@@ -23,9 +23,13 @@ public:
 	const glm::ivec2& GetEnemyRespawn_2() const;
 	const glm::ivec2& GetEnemyRespawn_3() const;
 
+	std::vector<std::shared_ptr<IGameObject>> GetObjectsInArea(const glm::vec2& bottomLeft, glm::vec2& tomRight);
+
 private:
-	size_t width_;
-	size_t height_;
+	size_t widthBlocks_ = 0;
+	size_t heightBlocks_ = 0;
+	unsigned int widthPixels_ = 0;
+	unsigned int heightPixels_ = 0;
 
 	glm::ivec2 playerRespawn_1_;
 	glm::ivec2 playerRespawn_2_;
@@ -34,5 +38,5 @@ private:
 	glm::ivec2 enemyRespawn_3_;
 
 
-	std::vector<std::shared_ptr<IGameObjcect>> mapObjects_;
+	std::vector<std::shared_ptr<IGameObject>> mapObjects_;
 };

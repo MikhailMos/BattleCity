@@ -4,7 +4,7 @@
 #include "../../renderer/Sprite.h"
 
 Water::Water(const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer)
-	: IGameObjcect(position, size, rotation, layer)
+	: IGameObject(IGameObject::EObjectType::Water, position, size, rotation, layer)
     , sprite_(ResourceManager::GetSprite("water"))
     , spriteAnimator_(sprite_)
     , blockOffsets_{ glm::vec2(0, size_.y / 2.f),
@@ -13,6 +13,7 @@ Water::Water(const glm::vec2& position, const glm::vec2& size, const float rotat
                      glm::vec2(size_.x / 2.f, 0) }
 
 {
+    colliders_.emplace_back(glm::vec2(0), size_);
 }
 
 void Water::RenderBlock(const EBlockLocation eBlockLocation) const
@@ -31,4 +32,9 @@ void Water::Render() const
 void Water::Update(const double delta)
 {
     spriteAnimator_.Update(delta);
+}
+
+bool Water::Collides(const EObjectType objectType)
+{
+    return objectType != IGameObject::EObjectType::Bullet;
 }

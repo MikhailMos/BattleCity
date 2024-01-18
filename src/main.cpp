@@ -100,7 +100,7 @@ int main(int argc, char** argv)
         ResourceManager::SetExecutablePath(argv[0]);
         
         // инициализируем физику
-        PhysicsEngine::Init();
+        Physics::PhysicsEngine::Init();
         // инициализируем игру
         g_game->Init();
 
@@ -120,7 +120,7 @@ int main(int argc, char** argv)
             lastTime = currentTime;
 
             g_game->Update(duration);
-            PhysicsEngine::Update(duration);
+            Physics::PhysicsEngine::Update(duration);
             
             /* Render here */
             // очищаем экран

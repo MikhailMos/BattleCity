@@ -9,7 +9,7 @@ namespace RenderEngine {
 	class Sprite;
 }
 
-class Trees : public IGameObjcect
+class Trees : public IGameObject
 {
 public:
 
