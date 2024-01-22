@@ -45,7 +45,7 @@ public:
 	static bool LoadJSONResources(const std::string& JSONPath);
 
 	static const std::vector<std::vector<std::string>>& GetLevels();
-
+	static const std::vector<std::string>& GetStartScreen();
 
 private:
 	typedef std::map<const std::string, std::shared_ptr<RenderEngine::ShaderProgram>> ShaderProgramsMap;
@@ -60,6 +60,7 @@ private:
 	static SpritesMap m_sprites_;
 
 	static std::vector<std::vector<std::string>> levels_;
+	static std::vector<std::string> startScreen_;
 
 	static std::string GetFileString(const std::string& relativeFilePath);
 

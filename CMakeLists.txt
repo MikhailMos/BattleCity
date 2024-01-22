@@ -47,8 +47,11 @@ set(SPRITE
 set(GAME
 	src/game/Game.h
 	src/game/Game.cpp
-	src/game/Level.h
-	src/game/Level.cpp
+	src/game/GameStates/Level.h
+	src/game/GameStates/Level.cpp
+	src/game/GameStates/IGameState.h
+	src/game/GameStates/StartScreen.cpp
+	src/game/GameStates/StartScreen.h
 )
 
 set(GAME_OBJECTS

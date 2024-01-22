@@ -5,13 +5,13 @@
 #include <cmath>
 #include <algorithm>
 
-#include "GameObjects/BrickWall.h"
-#include "GameObjects/BetonWall.h"
-#include "GameObjects/Trees.h"
-#include "GameObjects/Ice.h"
-#include "GameObjects/Water.h"
-#include "GameObjects/Eagle.h"
-#include "GameObjects/Border.h"
+#include "../GameObjects/BrickWall.h"
+#include "../GameObjects/BetonWall.h"
+#include "../GameObjects/Trees.h"
+#include "../GameObjects/Ice.h"
+#include "../GameObjects/Water.h"
+#include "../GameObjects/Eagle.h"
+#include "../GameObjects/Border.h"
 
 
 std::shared_ptr<IGameObject> CreateGameObjectFromDescription(const char description, const glm::vec2& position, const glm::vec2& size, const float rotation)
@@ -158,14 +158,14 @@ void Level::Update(const double delta)
 	}
 }
 
-size_t Level::GetLevelWidth() const
+unsigned int Level::GetStateWidth() const
 {
-    return (widthBlocks_ + 3) * BLOCK_SIZE;
+    return static_cast<unsigned int>((widthBlocks_ + 3) * BLOCK_SIZE);
 }
 
-size_t Level::GetLevelHeight() const
+unsigned int Level::GetStateHeight() const
 {
-    return (heightBlocks_ + 1) * BLOCK_SIZE;
+    return static_cast<unsigned int>((heightBlocks_ + 1) * BLOCK_SIZE);
 }
 
 const glm::ivec2& Level::GetPlayerRespawn_1() const

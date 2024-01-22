@@ -20,6 +20,7 @@ std::string ResourceManager::m_path_;
 ResourceManager::TexturesMap ResourceManager::m_textures_;
 ResourceManager::SpritesMap ResourceManager::m_sprites_;
 std::vector<std::vector<std::string>> ResourceManager::levels_;
+std::vector<std::string> ResourceManager::startScreen_;
 
 void ResourceManager::SetExecutablePath(const std::string& executablePath)
 {
@@ -277,6 +278,31 @@ bool ResourceManager::LoadJSONResources(const std::string& JSONPath)
 		}
 	}
 
+	// подгружаем стартовый экран
+	auto startScreenIt = document.FindMember("start_screen");
+	if (startScreenIt != document.MemberEnd())
+	{
+		const auto descriptionArray = startScreenIt->value.GetArray();
+		startScreen_.reserve(descriptionArray.Size());
+		size_t maxLength = 0;
+		for (const auto& currentRow : descriptionArray)
+		{
+			startScreen_.emplace_back(currentRow.GetString());
+			if (maxLength < startScreen_.back().length())
+			{
+				maxLength = startScreen_.back().length();
+			}
+		}
+		// выравниваем строки
+		for (auto& currentRow : startScreen_)
+		{
+			while (currentRow.length() < maxLength)
+			{
+				currentRow.append("F");
+			}
+		}
+	}
+
 	// подгружаем текстурные уровня	
 	auto levelsIt = document.FindMember("levels");
 	if (levelsIt != document.MemberEnd())
@@ -314,6 +340,11 @@ bool ResourceManager::LoadJSONResources(const std::string& JSONPath)
 const std::vector<std::vector<std::string>>& ResourceManager::GetLevels()
 {
 	return levels_;
+}
+
+const std::vector<std::string>& ResourceManager::GetStartScreen()
+{
+	return startScreen_;
 }
 
 std::string ResourceManager::GetFileString(const std::string& relativeFilePath)
