@@ -6,6 +6,7 @@
 #include <glm/vec2.hpp>
 
 #include "IGameState.h"
+#include "../Game.h"
 
 class IGameObject;
 class Tank;
@@ -14,7 +15,7 @@ class Level : public IGameState {
 public:
 	static constexpr unsigned int BLOCK_SIZE = 16;
 
-	Level(const std::vector<std::string>& levelDescription);
+	Level(const std::vector<std::string>& levelDescription, const Game::EGameMode eGameMode);
 	virtual void Render() const override;
 	virtual void Update(const double delta) override;
 	virtual unsigned int GetStateWidth() const override;
@@ -44,5 +45,7 @@ private:
 
 
 	std::vector<std::shared_ptr<IGameObject>> mapObjects_;
-	std::shared_ptr<Tank> pTank_;
+	std::shared_ptr<Tank> pTank1_;
+	std::shared_ptr<Tank> pTank2_;
+	Game::EGameMode eGameMode_;
 };

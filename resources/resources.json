@@ -303,6 +303,16 @@
 				"",
 				""
 			]
+		},
+
+		{
+			"name": "menu_128x64",
+			"filePath": "resources/textures/menu_128x64.png",
+			"subTextureWidth": 128,
+			"subTextureHeight": 64,
+			"subTextures": [
+				"menu"
+			]
 		}
 	],
 

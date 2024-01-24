@@ -99,8 +99,8 @@ void StartScreen::Render() const
             current.first->Render(current.second, glm::vec2(BLOCK_SIZE), 0.f);
         }
     }
-    //menuSprite_.first->Render(menuSprite_.second, glm::vec2(MENU_WIDTH, MENU_HEIGHT), 0.f);
-    //tankSprite_.first->Render(glm::vec2(tankSprite_.second.x, tankSprite_.second.y - currentMenuSelection_ * 2 * BLOCK_SIZE), glm::vec2(TANK_SIZE), 0.f, 0.f, tankSpriteAnimator_.GetCurrentFrame());
+    menuSprite_.first->Render(menuSprite_.second, glm::vec2(MENU_WIDTH, MENU_HEIGHT), 0.f);
+    tankSprite_.first->Render(glm::vec2(tankSprite_.second.x, tankSprite_.second.y - currentMenuSelection_ * 2 * BLOCK_SIZE), glm::vec2(TANK_SIZE), 0.f, 0.f, tankSpriteAnimator_.GetCurrentFrame());
 }
 
 void StartScreen::Update(const double delta)

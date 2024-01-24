@@ -37,6 +37,9 @@ void Game::Render()
 
 void Game::Update(const double delta)
 {
+    pCurrentGameState_->ProcessInput(keys_);
+    pCurrentGameState_->Update(delta);
+    /*
     switch (eCurrentGameState_)
     {
     case Game::EGameState::StartScreen:
@@ -53,7 +56,7 @@ void Game::Update(const double delta)
        
         break;
     }
-    
+    */
 }
 
 void Game::SetKey(const int key, const int action)
@@ -121,7 +124,7 @@ void Game::StartNewLevel(const size_t level, const EGameMode eGameMode)
 {
     // INITIALIZING LEVEL
     currentLevelIndex_ = level;
-    auto pLevel = std::make_shared<Level>(ResourceManager::GetLevels()[currentLevelIndex_]); // , eGameMode);
+    auto pLevel = std::make_shared<Level>(ResourceManager::GetLevels()[currentLevelIndex_], eGameMode);
     pCurrentGameState_ = pLevel;
     Physics::PhysicsEngine::SetCurrentLevel(pLevel);
     UpdateViewport();
