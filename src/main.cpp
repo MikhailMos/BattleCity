@@ -11,37 +11,19 @@
 #include "renderer/Renderer.h"
 #include "physics/PhysicsEngine.h"
 
-const int LEVEL_WIDHT = 13;
-const int LEVEL_HEIGHT = 14;
-const int BLOCK_WIDTH = 16;
-const int BLOCK_HEIGHT = 16;
+static constexpr unsigned int SCALE = 3;
+static constexpr unsigned int BLOCK_SIZE = 16;
+static constexpr unsigned int BLOCK_WIDTH = 16;
+static constexpr unsigned int BLOCK_HEIGHT = 15;
 
-glm::ivec2 g_windowSize((LEVEL_WIDHT * BLOCK_WIDTH), (LEVEL_HEIGHT * BLOCK_HEIGHT));
+glm::uvec2 g_windowSize((SCALE * BLOCK_WIDTH * BLOCK_SIZE), (SCALE * BLOCK_HEIGHT* BLOCK_SIZE));
 std::unique_ptr<Game> g_game = std::make_unique<Game>(g_windowSize);
 
 void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height)
 {
     g_windowSize.x = width;
     g_windowSize.y = height;
-
-    const float map_aspect_ratio = static_cast<float>(g_game->GetCurrentWidth()) / g_game->GetCurrentHeight();
-    unsigned int viewPortWidth = g_windowSize.x;
-    unsigned int viewPortHeight = g_windowSize.y;
-    unsigned int viewPortLeftOffset = 0;
-    unsigned int viewPortBottomOffset = 0;
-
-    if (static_cast<float>(g_windowSize.x) / g_windowSize.y > map_aspect_ratio)
-    {
-        viewPortWidth = static_cast<unsigned int>(g_windowSize.y * map_aspect_ratio);
-        viewPortLeftOffset = (g_windowSize.x - viewPortWidth) / 2;
-    }
-    else
-    {
-        viewPortHeight = static_cast<unsigned int>(g_windowSize.x / map_aspect_ratio);
-        viewPortBottomOffset = (g_windowSize.y - viewPortHeight) / 2;
-    }
-   
-    RenderEngine::Renderer::SetViewport(viewPortWidth, viewPortHeight, viewPortLeftOffset, viewPortBottomOffset);
+    g_game->SetWindowSize(g_windowSize);
 }
 
 void glfwKeyCallback(GLFWwindow* pWindow, int key, int scancode, int action, int mode)
@@ -104,7 +86,7 @@ int main(int argc, char** argv)
         // инициализируем игру
         g_game->Init();
 
-        glfwSetWindowSize(pWindow, static_cast<int>(3 * g_game->GetCurrentWidth()), static_cast<int>(3 * g_game->GetCurrentHeight()));
+        //glfwSetWindowSize(pWindow, static_cast<int>(3 * g_game->GetCurrentWidth()), static_cast<int>(3 * g_game->GetCurrentHeight()));
 
         auto lastTime = std::chrono::high_resolution_clock::now();
 

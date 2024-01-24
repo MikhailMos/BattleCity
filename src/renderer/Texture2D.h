@@ -49,11 +49,11 @@ namespace RenderEngine {
 		void Bind() const;
 
 	private:
-		GLuint m_ID_;
-		GLenum m_mode_;
-		unsigned int m_width_;
-		unsigned int m_height_;
-		std::map<std::string, SubTexture2D> m_sub_textures_;
+		GLuint ID_;
+		GLenum mode_;
+		unsigned int width_;
+		unsigned int height_;
+		std::map<std::string, SubTexture2D> sub_textures_;
 
 	};
 	

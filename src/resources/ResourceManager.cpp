@@ -15,25 +15,25 @@
 #define STBI_ONLY_PNG
 #include "stb_image.h"
 
-ResourceManager::ShaderProgramsMap ResourceManager::m_shaderPrograms_;
-std::string ResourceManager::m_path_;
-ResourceManager::TexturesMap ResourceManager::m_textures_;
-ResourceManager::SpritesMap ResourceManager::m_sprites_;
+ResourceManager::ShaderProgramsMap ResourceManager::shaderPrograms_;
+std::string ResourceManager::path_;
+ResourceManager::TexturesMap ResourceManager::textures_;
+ResourceManager::SpritesMap ResourceManager::sprites_;
 std::vector<std::vector<std::string>> ResourceManager::levels_;
 std::vector<std::string> ResourceManager::startScreen_;
 
 void ResourceManager::SetExecutablePath(const std::string& executablePath)
 {
 	size_t found = executablePath.find_last_of("/\\");
-	m_path_ = executablePath.substr(0, found);
+	path_ = executablePath.substr(0, found);
 }
 
 void ResourceManager::UnloadAllResources()
 {
-	m_shaderPrograms_.clear();
-	m_path_.clear();
-	m_textures_.clear();
-	m_sprites_.clear();
+	shaderPrograms_.clear();
+	path_.clear();
+	textures_.clear();
+	sprites_.clear();
 }
 
 std::shared_ptr<RenderEngine::ShaderProgram> ResourceManager::LoadShaders(const std::string& shaderName, const std::string& vertexPath, const std::string& fragmentPath)
@@ -50,7 +50,7 @@ std::shared_ptr<RenderEngine::ShaderProgram> ResourceManager::LoadShaders(const 
 		return nullptr;
 	}
 
-	std::shared_ptr<RenderEngine::ShaderProgram>& newShader = m_shaderPrograms_.emplace(shaderName, std::make_shared<RenderEngine::ShaderProgram>(vertexString, fragmentString)).first->second;
+	std::shared_ptr<RenderEngine::ShaderProgram>& newShader = shaderPrograms_.emplace(shaderName, std::make_shared<RenderEngine::ShaderProgram>(vertexString, fragmentString)).first->second;
 	if (!newShader->IsCompiled()) {
 		std::cerr << "Can't load shader program:\n"
 			<< "Vertex: " << vertexPath << "\n"
@@ -64,8 +64,8 @@ std::shared_ptr<RenderEngine::ShaderProgram> ResourceManager::LoadShaders(const 
 
 std::shared_ptr<RenderEngine::ShaderProgram> ResourceManager::GetShaderProgram(const std::string& shaderName)
 {
-	ShaderProgramsMap::const_iterator it = m_shaderPrograms_.find(shaderName);
-	if (it != m_shaderPrograms_.end()) {
+	ShaderProgramsMap::const_iterator it = shaderPrograms_.find(shaderName);
+	if (it != shaderPrograms_.end()) {
 		return it->second;
 	}
 
@@ -81,14 +81,14 @@ std::shared_ptr<RenderEngine::Texture2D> ResourceManager::LoadTexture(const std:
 	int height = 0;
 
 	stbi_set_flip_vertically_on_load(true);
-	unsigned char* pixels = stbi_load(std::string(m_path_ + "/" + texturePath).c_str(), &width, &height, &channels, 0);
+	unsigned char* pixels = stbi_load(std::string(path_ + "/" + texturePath).c_str(), &width, &height, &channels, 0);
 
 	if (!pixels) {
 		std::cerr << "Can't load image: " << texturePath << std::endl;
 		return nullptr;
 	}
 
-	std::shared_ptr<RenderEngine::Texture2D> new_texture = m_textures_.emplace(textureName, std::make_shared<RenderEngine::Texture2D>(width, height, 
+	std::shared_ptr<RenderEngine::Texture2D> new_texture = textures_.emplace(textureName, std::make_shared<RenderEngine::Texture2D>(width, height, 
 																															  pixels, 
 																															  channels, 
 																															  GL_NEAREST, 
@@ -101,8 +101,8 @@ std::shared_ptr<RenderEngine::Texture2D> ResourceManager::LoadTexture(const std:
 
 std::shared_ptr<RenderEngine::Texture2D> ResourceManager::GetTexture(const std::string& textureName)
 {
-	TexturesMap::const_iterator it = m_textures_.find(textureName);
-	if (it != m_textures_.end()) {
+	TexturesMap::const_iterator it = textures_.find(textureName);
+	if (it != textures_.end()) {
 		return it->second;
 	}
 
@@ -130,7 +130,7 @@ std::shared_ptr<RenderEngine::Sprite> ResourceManager::LoadSprite(const std::str
 		return nullptr;
 	}
 
-	std::shared_ptr<RenderEngine::Sprite> new_sprite = m_sprites_.emplace(spriteName, 
+	std::shared_ptr<RenderEngine::Sprite> new_sprite = sprites_.emplace(spriteName, 
 																	  std::make_shared<RenderEngine::Sprite>(pTexture, 
 																										 const_cast<std::string&>(subTextureName), 
 																										 pShader)
@@ -141,8 +141,8 @@ std::shared_ptr<RenderEngine::Sprite> ResourceManager::LoadSprite(const std::str
 
 std::shared_ptr<RenderEngine::Sprite> ResourceManager::GetSprite(const std::string& spriteName)
 {
-	SpritesMap::const_iterator it = m_sprites_.find(spriteName);
-	if (it != m_sprites_.end()) {
+	SpritesMap::const_iterator it = sprites_.find(spriteName);
+	if (it != sprites_.end()) {
 		return it->second;
 	}
 
@@ -350,7 +350,7 @@ const std::vector<std::string>& ResourceManager::GetStartScreen()
 std::string ResourceManager::GetFileString(const std::string& relativeFilePath)
 {
 	std::ifstream f;
-	f.open(m_path_ + "/" + relativeFilePath.c_str(), std::ios::in | std::ios::binary);
+	f.open(path_ + "/" + relativeFilePath.c_str(), std::ios::in | std::ios::binary);
 	if (!f.is_open()) {
 		std::cerr << "Failed to open file: " << relativeFilePath << std::endl;
 		return std::string{};

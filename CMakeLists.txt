@@ -116,7 +116,9 @@ add_subdirectory(external/glad)
 target_link_libraries(${PROJECT_NAME} glad)
 
 # включаем возможность инклюдировать функции glm в нашем проекте
-include_directories(external/glm)
+#include_directories(external/glm)
+add_subdirectory(external/glm)
+target_link_libraries(${PROJECT_NAME} glm)
 
 # подключаем библиотеку RapidJSON
 include_directories(external/rapidjson/include)

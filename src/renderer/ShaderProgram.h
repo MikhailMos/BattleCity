@@ -27,8 +27,8 @@ namespace RenderEngine {
 		void SetMatrix4(const std::string& name, const glm::mat4& matrix);
 
 	private:
-		bool m_isCompiled = false;
-		GLuint m_ID = 0;
+		bool isCompiled_ = false;
+		GLuint ID_ = 0;
 
 		bool CreateShader(const std::string& source, const GLenum shader_type, GLuint& shaderID);
 	};

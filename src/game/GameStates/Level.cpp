@@ -5,6 +5,8 @@
 #include <cmath>
 #include <algorithm>
 
+#include "GLFW/glfw3.h"
+
 #include "../GameObjects/BrickWall.h"
 #include "../GameObjects/BetonWall.h"
 #include "../GameObjects/Trees.h"
@@ -12,6 +14,7 @@
 #include "../GameObjects/Water.h"
 #include "../GameObjects/Eagle.h"
 #include "../GameObjects/Border.h"
+#include "../GameObjects/Tank.h"
 
 
 std::shared_ptr<IGameObject> CreateGameObjectFromDescription(const char description, const glm::vec2& position, const glm::vec2& size, const float rotation)
@@ -145,6 +148,8 @@ void Level::Render() const
 			currentMapOpbject->Render();
 		}
 	}
+    
+    pTank_->Render();
 }
 
 void Level::Update(const double delta)
@@ -156,6 +161,8 @@ void Level::Update(const double delta)
 			currentMapOpbject->Update(delta);
 		}
 	}
+
+    pTank_->Update(delta);
 }
 
 unsigned int Level::GetStateWidth() const
@@ -166,6 +173,42 @@ unsigned int Level::GetStateWidth() const
 unsigned int Level::GetStateHeight() const
 {
     return static_cast<unsigned int>((heightBlocks_ + 1) * BLOCK_SIZE);
+}
+
+void Level::ProcessInput(const std::array<bool, 349>& keys)
+{
+    if (pTank_)
+    {
+        if (keys[GLFW_KEY_W])
+        {
+            pTank_->SetOrientation(Tank::EOrientation::Top);
+            pTank_->SetVelocity(pTank_->GetMaxVelocity());
+        }
+        else if (keys[GLFW_KEY_A])
+        {
+            pTank_->SetOrientation(Tank::EOrientation::Left);
+            pTank_->SetVelocity(pTank_->GetMaxVelocity());
+        }
+        else if (keys[GLFW_KEY_S])
+        {
+            pTank_->SetOrientation(Tank::EOrientation::Bottom);
+            pTank_->SetVelocity(pTank_->GetMaxVelocity());
+        }
+        else if (keys[GLFW_KEY_D])
+        {
+            pTank_->SetOrientation(Tank::EOrientation::Right);
+            pTank_->SetVelocity(pTank_->GetMaxVelocity());
+        }
+        else
+        {
+            pTank_->SetVelocity(0);
+        }
+
+        if (pTank_ && keys[GLFW_KEY_SPACE])
+        {
+            pTank_->Fire();
+        }
+    }
 }
 
 const glm::ivec2& Level::GetPlayerRespawn_1() const
@@ -242,4 +285,11 @@ std::vector<std::shared_ptr<IGameObject>> Level::GetObjectsInArea(const glm::vec
     }
 
     return output;
+}
+
+void Level::InitLevel()
+{
+    // INITIALIZING TANK
+    pTank_ = std::make_shared<Tank>(0.05, GetPlayerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
+    Physics::PhysicsEngine::AddDynamicGameObject(pTank_);
 }

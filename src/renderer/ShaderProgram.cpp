@@ -23,22 +23,22 @@ namespace RenderEngine {
 		}
 
 		// создание ShaderProgram и линковка
-		m_ID = glCreateProgram();
-		glAttachShader(m_ID, vertexShaderID);
-		glAttachShader(m_ID, fragmentShaderID);
-		glLinkProgram(m_ID);
+		ID_ = glCreateProgram();
+		glAttachShader(ID_, vertexShaderID);
+		glAttachShader(ID_, fragmentShaderID);
+		glLinkProgram(ID_);
 
 		GLint success;
-		glGetProgramiv(m_ID, GL_LINK_STATUS, &success);
+		glGetProgramiv(ID_, GL_LINK_STATUS, &success);
 		if (!success) {
 			GLchar infolog[1024];
-			glGetShaderInfoLog(m_ID, 1024, nullptr, infolog);
+			glGetShaderInfoLog(ID_, 1024, nullptr, infolog);
 			std::cerr << "ERROR::SHADER: Link time error:\n" << infolog << std::endl;
 			
 		}
 		else 
 		{
-			m_isCompiled = true;
+			isCompiled_ = true;
 		}
 		
 		// удаляем шейдеры, т.к. они уже есть в ShaderProgram
@@ -48,53 +48,53 @@ namespace RenderEngine {
 
 	ShaderProgram::~ShaderProgram()
 	{
-		glDeleteProgram(m_ID);
+		glDeleteProgram(ID_);
 	}
 
 	ShaderProgram::ShaderProgram(ShaderProgram&& shaderProgram) noexcept
 	{
-		m_ID = shaderProgram.m_ID;
-		m_isCompiled = shaderProgram.m_isCompiled;
+		ID_ = shaderProgram.ID_;
+		isCompiled_ = shaderProgram.isCompiled_;
 
-		shaderProgram.m_ID = 0;
-		shaderProgram.m_isCompiled = false;
+		shaderProgram.ID_ = 0;
+		shaderProgram.isCompiled_ = false;
 	}
 
 	ShaderProgram& ShaderProgram::operator=(ShaderProgram&& shaderProgram) noexcept
 	{
-		glDeleteProgram(m_ID);
-		m_ID = shaderProgram.m_ID;
-		m_isCompiled = shaderProgram.m_isCompiled;
+		glDeleteProgram(ID_);
+		ID_ = shaderProgram.ID_;
+		isCompiled_ = shaderProgram.isCompiled_;
 
-		shaderProgram.m_ID = 0;
-		shaderProgram.m_isCompiled = false;
+		shaderProgram.ID_ = 0;
+		shaderProgram.isCompiled_ = false;
 
 		return *this;
 	}
 
 	bool ShaderProgram::IsCompiled() const
 	{
-		return m_isCompiled;
+		return isCompiled_;
 	}
 
 	void ShaderProgram::Use() const
 	{
-		glUseProgram(m_ID);
+		glUseProgram(ID_);
 	}
 
 	void ShaderProgram::SetInt(const std::string& name, const GLint value)
 	{
-		glUniform1i(glGetUniformLocation(m_ID, name.c_str()), value);
+		glUniform1i(glGetUniformLocation(ID_, name.c_str()), value);
 	}
 
 	void ShaderProgram::SetFoat(const std::string& name, const GLfloat value)
 	{
-		glUniform1f(glGetUniformLocation(m_ID, name.c_str()), value);
+		glUniform1f(glGetUniformLocation(ID_, name.c_str()), value);
 	}
 
 	void ShaderProgram::SetMatrix4(const std::string& name, const glm::mat4& matrix)
 	{
-		glUniformMatrix4fv(glGetUniformLocation(m_ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
+		glUniformMatrix4fv(glGetUniformLocation(ID_, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
 	bool ShaderProgram::CreateShader(const std::string& source, const GLenum shader_type, GLuint& shaderID)

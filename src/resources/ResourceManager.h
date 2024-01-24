@@ -49,15 +49,15 @@ public:
 
 private:
 	typedef std::map<const std::string, std::shared_ptr<RenderEngine::ShaderProgram>> ShaderProgramsMap;
-	static ShaderProgramsMap m_shaderPrograms_;
+	static ShaderProgramsMap shaderPrograms_;
 
-	static std::string m_path_;
+	static std::string path_;
 
 	typedef std::map<const std::string, std::shared_ptr<RenderEngine::Texture2D>> TexturesMap;
-	static TexturesMap m_textures_;
+	static TexturesMap textures_;
 
 	typedef std::map<const std::string, std::shared_ptr<RenderEngine::Sprite>> SpritesMap;
-	static SpritesMap m_sprites_;
+	static SpritesMap sprites_;
 
 	static std::vector<std::vector<std::string>> levels_;
 	static std::vector<std::string> startScreen_;
