@@ -146,11 +146,11 @@ void Level::InitLevel()
     switch (eGameMode_)
     {
     case Game::EGameMode::TwoPlayers:
-        pTank2_ = std::make_shared<Tank>(0.05, GetPlayerRespawn_2(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
+        pTank2_ = std::make_shared<Tank>(Tank::ETankType::Player2Green_type1, 0.05, GetPlayerRespawn_2(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
         Physics::PhysicsEngine::AddDynamicGameObject(pTank2_);
         [[fallthrough]];
     case Game::EGameMode::OnePlayer:
-        pTank1_ = std::make_shared<Tank>(0.05, GetPlayerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
+        pTank1_ = std::make_shared<Tank>(Tank::ETankType::Player1Yellow_type1, 0.05, GetPlayerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
         Physics::PhysicsEngine::AddDynamicGameObject(pTank1_);
     }
 

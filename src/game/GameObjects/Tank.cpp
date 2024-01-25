@@ -6,14 +6,19 @@
 #include "Bullet.h"
 
 
-Tank::Tank(const double maxVelocity, const glm::vec2& position, const glm::vec2& size, const float layer)
+const std::string& Tank::GetTankSpriteFromType(const ETankType eType)
+{
+	return TankTypeToSpriteString[static_cast<size_t>(eType)];
+}
+
+Tank::Tank(const Tank::ETankType eType, const double maxVelocity, const glm::vec2& position, const glm::vec2& size, const float layer)
 	: IGameObject(IGameObject::EObjectType::Tank, position, size, 0.f, layer)
 	, e_orientation_(EOrientation::Top)
 	, pCurrentBullet_(std::make_shared<Bullet>(0.1, position_ + size_ / 4.f, size_ / 2.f, size_, layer))
-	, pSprite_top_(ResourceManager::GetSprite("player1_yellow_tank_type1_sprite_top"))
-	, pSprite_bottom_(ResourceManager::GetSprite("player1_yellow_tank_type1_sprite_bottom"))
-	, pSprite_left_(ResourceManager::GetSprite("player1_yellow_tank_type1_sprite_left"))
-	, pSprite_right_(ResourceManager::GetSprite("player1_yellow_tank_type1_sprite_right"))
+	, pSprite_top_(ResourceManager::GetSprite(GetTankSpriteFromType(eType) + "_top"))
+	, pSprite_bottom_(ResourceManager::GetSprite(GetTankSpriteFromType(eType) + "_bottom"))
+	, pSprite_left_(ResourceManager::GetSprite(GetTankSpriteFromType(eType) + "_left"))
+	, pSprite_right_(ResourceManager::GetSprite(GetTankSpriteFromType(eType) + "_right"))
 	, spriteAnimator_top_(pSprite_top_)
 	, spriteAnimator_bottom_(pSprite_bottom_)
 	, spriteAnimator_left_(pSprite_left_)
@@ -174,3 +179,5 @@ void Tank::Fire()
 		pCurrentBullet_->Fire(position_ + size_ / 4.f + size_ * direction_ / 4.f, direction_);
 	}
 }
+
+
