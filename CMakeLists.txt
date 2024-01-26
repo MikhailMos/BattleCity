@@ -47,6 +47,8 @@ set(SPRITE
 set(GAME
 	src/game/Game.h
 	src/game/Game.cpp
+	src/game/AIComponent.h
+	src/game/AIComponent.cpp
 	src/game/GameStates/Level.h
 	src/game/GameStates/Level.cpp
 	src/game/GameStates/IGameState.h

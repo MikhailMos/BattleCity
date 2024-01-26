@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <set>
 #include <glm/vec2.hpp>
 
 #include "IGameState.h"
@@ -44,8 +45,9 @@ private:
 	glm::ivec2 enemyRespawn_3_;
 
 
-	std::vector<std::shared_ptr<IGameObject>> mapObjects_;
+	std::vector<std::shared_ptr<IGameObject>> levelObjects_;
 	std::shared_ptr<Tank> pTank1_;
 	std::shared_ptr<Tank> pTank2_;
+	std::set<std::shared_ptr<Tank>> enemyTanks_;
 	Game::EGameMode eGameMode_;
 };

@@ -85,7 +85,7 @@ Level::Level(const std::vector<std::string>& levelDescription, const Game::EGame
     enemyRespawn_2_  = { BLOCK_SIZE * (widthBlocks_ / 2 + 1), (heightBlocks_ * BLOCK_SIZE) - BLOCK_SIZE / 2 };
     enemyRespawn_3_  = { BLOCK_SIZE * widthBlocks_,           (heightBlocks_ * BLOCK_SIZE) - BLOCK_SIZE / 2 };
 
-	mapObjects_.reserve(widthBlocks_ * heightBlocks_ + 4); // 4 - границы
+	levelObjects_.reserve(widthBlocks_ * heightBlocks_ + 4); // 4 - границы
 	unsigned int currentBottomOffset = static_cast<unsigned int>(BLOCK_SIZE * (heightBlocks_ - 1) + BLOCK_SIZE / 2.f);
 
 	for (const std::string& currentRow : levelDescription)
@@ -98,26 +98,26 @@ Level::Level(const std::vector<std::string>& levelDescription, const Game::EGame
             {
             case 'K':
                 playerRespawn_1_ = { currentLeftOffset, currentBottomOffset };
-                mapObjects_.emplace_back(nullptr);
+                levelObjects_.emplace_back(nullptr);
                 break;
             case 'L':
                 playerRespawn_2_ = { currentLeftOffset, currentBottomOffset };
-                mapObjects_.emplace_back(nullptr);
+                levelObjects_.emplace_back(nullptr);
                 break;
             case 'M':
                 enemyRespawn_1_ = { currentLeftOffset, currentBottomOffset };
-                mapObjects_.emplace_back(nullptr);
+                levelObjects_.emplace_back(nullptr);
                 break;
             case 'N':
                 enemyRespawn_2_ = { currentLeftOffset, currentBottomOffset };
-                mapObjects_.emplace_back(nullptr);
+                levelObjects_.emplace_back(nullptr);
                 break;
             case 'O':
                 enemyRespawn_3_ = { currentLeftOffset, currentBottomOffset };
-                mapObjects_.emplace_back(nullptr);
+                levelObjects_.emplace_back(nullptr);
                 break;
             default:
-                mapObjects_.emplace_back(CreateGameObjectFromDescription(currentElement, glm::vec2(currentLeftOffset, currentBottomOffset), glm::vec2(BLOCK_SIZE, BLOCK_SIZE), 0.f));
+                levelObjects_.emplace_back(CreateGameObjectFromDescription(currentElement, glm::vec2(currentLeftOffset, currentBottomOffset), glm::vec2(BLOCK_SIZE, BLOCK_SIZE), 0.f));
                 break;
             }
             
@@ -128,16 +128,16 @@ Level::Level(const std::vector<std::string>& levelDescription, const Game::EGame
 	}
 
     // bottom border
-    mapObjects_.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, 0.f), glm::vec2(widthBlocks_ * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
+    levelObjects_.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, 0.f), glm::vec2(widthBlocks_ * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
 
     // top border
-    mapObjects_.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, heightBlocks_ * BLOCK_SIZE + BLOCK_SIZE / 2.f), glm::vec2(widthBlocks_ * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
+    levelObjects_.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, heightBlocks_ * BLOCK_SIZE + BLOCK_SIZE / 2.f), glm::vec2(widthBlocks_ * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
 
     // left border
-    mapObjects_.emplace_back(std::make_shared<Border>(glm::vec2(0.f, 0.f), glm::vec2(BLOCK_SIZE, (heightBlocks_ + 1) * BLOCK_SIZE), 0.f, 0.f));
+    levelObjects_.emplace_back(std::make_shared<Border>(glm::vec2(0.f, 0.f), glm::vec2(BLOCK_SIZE, (heightBlocks_ + 1) * BLOCK_SIZE), 0.f, 0.f));
 
     // right border
-    mapObjects_.emplace_back(std::make_shared<Border>(glm::vec2((widthBlocks_ + 1) * BLOCK_SIZE, 0.f), glm::vec2(BLOCK_SIZE * 2.f, (heightBlocks_ + 1) * BLOCK_SIZE), 0.f, 0.f));
+    levelObjects_.emplace_back(std::make_shared<Border>(glm::vec2((widthBlocks_ + 1) * BLOCK_SIZE, 0.f), glm::vec2(BLOCK_SIZE * 2.f, (heightBlocks_ + 1) * BLOCK_SIZE), 0.f, 0.f));
 }
 
 void Level::InitLevel()
@@ -146,19 +146,27 @@ void Level::InitLevel()
     switch (eGameMode_)
     {
     case Game::EGameMode::TwoPlayers:
-        pTank2_ = std::make_shared<Tank>(Tank::ETankType::Player2Green_type1, 0.05, GetPlayerRespawn_2(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
+        pTank2_ = std::make_shared<Tank>(Tank::ETankType::Player2Green_type1, false, true, Tank::EOrientation::Top, 0.05, GetPlayerRespawn_2(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
         Physics::PhysicsEngine::AddDynamicGameObject(pTank2_);
         [[fallthrough]];
     case Game::EGameMode::OnePlayer:
-        pTank1_ = std::make_shared<Tank>(Tank::ETankType::Player1Yellow_type1, 0.05, GetPlayerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
+        pTank1_ = std::make_shared<Tank>(Tank::ETankType::Player1Yellow_type1, false, true, Tank::EOrientation::Top, 0.05, GetPlayerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
         Physics::PhysicsEngine::AddDynamicGameObject(pTank1_);
+    }
+
+    enemyTanks_.emplace(std::make_shared<Tank>(Tank::ETankType::EnemyWhite_type1, true, false, Tank::EOrientation::Bottom, 0.05, GetEnemyRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f));
+    enemyTanks_.emplace(std::make_shared<Tank>(Tank::ETankType::EnemyWhite_type4, true, false, Tank::EOrientation::Bottom, 0.05, GetEnemyRespawn_2(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f));
+    enemyTanks_.emplace(std::make_shared<Tank>(Tank::ETankType::EnemyWhite_type2, true, false, Tank::EOrientation::Bottom, 0.05, GetEnemyRespawn_3(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f));
+    for (const auto& currentTank : enemyTanks_)
+    {
+        Physics::PhysicsEngine::AddDynamicGameObject(currentTank);
     }
 
 }
 
 void Level::Render() const
 {
-	for (const auto& currentMapOpbject : mapObjects_)
+	for (const auto& currentMapOpbject : levelObjects_)
 	{
 		if (currentMapOpbject)
 		{
@@ -175,11 +183,16 @@ void Level::Render() const
         pTank1_->Render();
     }
 
+    for (const auto& currentTank : enemyTanks_)
+    {
+        currentTank->Render();
+    }
+
 }
 
 void Level::Update(const double delta)
 {
-	for (const auto& currentMapOpbject : mapObjects_)
+	for (const auto& currentMapOpbject : levelObjects_)
 	{
 		if (currentMapOpbject)
 		{
@@ -194,6 +207,11 @@ void Level::Update(const double delta)
         [[fallthrough]];
     case Game::EGameMode::OnePlayer:
         pTank1_->Update(delta);
+    }
+
+    for (const auto& currentTank : enemyTanks_)
+    {
+        currentTank->Update(delta);
     }
 
 }
@@ -322,7 +340,7 @@ std::vector<std::shared_ptr<IGameObject>> Level::GetObjectsInArea(const glm::vec
     {
         for (size_t currentRow = startY; currentRow < endY; ++currentRow)
         {
-            auto& currentObject = mapObjects_[currentRow * widthBlocks_ + currentColumn];
+            auto& currentObject = levelObjects_[currentRow * widthBlocks_ + currentColumn];
             if (currentObject) 
             {
                 output.push_back(currentObject);
@@ -332,22 +350,22 @@ std::vector<std::shared_ptr<IGameObject>> Level::GetObjectsInArea(const glm::vec
     // вставляем границы карты
     if (endX >= widthBlocks_)
     {
-        output.push_back(mapObjects_[mapObjects_.size() - 1]);
+        output.push_back(levelObjects_[levelObjects_.size() - 1]);
     }
 
     if (startX <= 1)
     {
-        output.push_back(mapObjects_[mapObjects_.size() - 2]);
+        output.push_back(levelObjects_[levelObjects_.size() - 2]);
     }
 
     if (startY <= 1)
     {
-        output.push_back(mapObjects_[mapObjects_.size() - 3]);
+        output.push_back(levelObjects_[levelObjects_.size() - 3]);
     }
 
     if (endY >= heightBlocks_)
     {
-        output.push_back(mapObjects_[mapObjects_.size() - 4]);
+        output.push_back(levelObjects_[levelObjects_.size() - 4]);
     }
 
     return output;

@@ -29,6 +29,7 @@ public:
 	unsigned int GetCurrentWidth() const;
 	unsigned int GetCurrentHeight() const;
 	void StartNewLevel(const size_t level, const EGameMode eGameMode);
+	void NextLevel(const EGameMode eGameMode);
 	void UpdateViewport();
 	void SetWindowSize(const glm::uvec2& windowSize);
 

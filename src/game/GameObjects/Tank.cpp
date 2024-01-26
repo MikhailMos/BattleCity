@@ -3,6 +3,7 @@
 #include "../../renderer/Sprite.h"
 #include "../../resources/ResourceManager.h"
 #include "../../physics/PhysicsEngine.h"
+#include "../AIComponent.h"
 #include "Bullet.h"
 
 
@@ -11,9 +12,9 @@ const std::string& Tank::GetTankSpriteFromType(const ETankType eType)
 	return TankTypeToSpriteString[static_cast<size_t>(eType)];
 }
 
-Tank::Tank(const Tank::ETankType eType, const double maxVelocity, const glm::vec2& position, const glm::vec2& size, const float layer)
+Tank::Tank(const Tank::ETankType eType, const bool bHasAI, const bool bShieldOnSpawn, const EOrientation eOrientation, const double maxVelocity, const glm::vec2& position, const glm::vec2& size, const float layer)
 	: IGameObject(IGameObject::EObjectType::Tank, position, size, 0.f, layer)
-	, e_orientation_(EOrientation::Top)
+	, e_orientation_(eOrientation)
 	, pCurrentBullet_(std::make_shared<Bullet>(0.1, position_ + size_ / 4.f, size_ / 2.f, size_, layer))
 	, pSprite_top_(ResourceManager::GetSprite(GetTankSpriteFromType(eType) + "_top"))
 	, pSprite_bottom_(ResourceManager::GetSprite(GetTankSpriteFromType(eType) + "_bottom"))
@@ -30,12 +31,25 @@ Tank::Tank(const Tank::ETankType eType, const double maxVelocity, const glm::vec
 	, maxVelocity_(maxVelocity)
 	, isSpawning_(true)
 	, hasShield_(false)
+	, bShieldOnSpawn_(bShieldOnSpawn)
 {
+	SetOrientation(eOrientation);
+	
 	respawnTimer_.SetCallback([&]()
 		{
 			isSpawning_ = false;
-			hasShield_ = true;
-			shieldTimer_.Start(2000);
+
+			if (pAIComponent_)
+			{
+				velocity_ = maxVelocity_;
+			}
+
+			if (bShieldOnSpawn_)
+			{
+				hasShield_ = true;
+				shieldTimer_.Start(2000);
+			}
+			
 		}
 	);
 
@@ -49,6 +63,11 @@ Tank::Tank(const Tank::ETankType eType, const double maxVelocity, const glm::vec
 
 	colliders_.emplace_back(glm::vec2(0), size_);
 	Physics::PhysicsEngine::AddDynamicGameObject(pCurrentBullet_);
+
+	if (bHasAI)
+	{
+		pAIComponent_ = std::make_unique<AIComponent>(this);
+	}
 }
 
 void Tank::Render() const
@@ -89,12 +108,8 @@ void Tank::Render() const
 
 void Tank::SetOrientation(const EOrientation eOrientation)
 {
-	if (e_orientation_ == eOrientation)
-	{
-		return;
-	}
-
 	e_orientation_ = eOrientation;
+
 	switch (e_orientation_)
 	{
 	case Tank::EOrientation::Top:
@@ -130,6 +145,11 @@ void Tank::Update(const double delta)
 	}
 	else 
 	{
+		if (pAIComponent_)
+		{
+			pAIComponent_->Update(delta);
+		}
+		
 		if (hasShield_)
 		{
 			spriteAnimator_shield_.Update(delta);

@@ -22,6 +22,7 @@
 Game::Game(const glm::uvec2& windowSize)
 	: eCurrentGameState_(EGameState::StartScreen)
     , windowSize_(windowSize)
+    , currentLevelIndex_(0)
 {
 	keys_.fill(false);
 }
@@ -39,24 +40,6 @@ void Game::Update(const double delta)
 {
     pCurrentGameState_->ProcessInput(keys_);
     pCurrentGameState_->Update(delta);
-    /*
-    switch (eCurrentGameState_)
-    {
-    case Game::EGameState::StartScreen:
-        if (keys_[GLFW_KEY_ENTER])
-        {
-            eCurrentGameState_ = EGameState::Level;
-            StartNewLevel(0, EGameMode::OnePlayer);
-        }
-        break;
-    
-    case Game::EGameState::Level:
-        pCurrentGameState_->ProcessInput(keys_);
-        pCurrentGameState_->Update(delta);
-       
-        break;
-    }
-    */
 }
 
 void Game::SetKey(const int key, const int action)
@@ -128,6 +111,11 @@ void Game::StartNewLevel(const size_t level, const EGameMode eGameMode)
     pCurrentGameState_ = pLevel;
     Physics::PhysicsEngine::SetCurrentLevel(pLevel);
     UpdateViewport();
+}
+
+void Game::NextLevel(const EGameMode eGameMode)
+{
+    StartNewLevel(++currentLevelIndex_, eGameMode);
 }
 
 void Game::SetWindowSize(const glm::uvec2& windowSize)
