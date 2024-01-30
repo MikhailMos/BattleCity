@@ -1,7 +1,9 @@
 ﻿#include "iGameObject.h"
 
 IGameObject::IGameObject(const EObjectType objectType, const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer)
-	: position_(position)
+	: pOwner_(nullptr)
+	, position_(position)
+	, targetPosition_(position)
 	, size_(size)
 	, rotation_(rotation)
 	, layer_(layer)
@@ -11,6 +13,16 @@ IGameObject::IGameObject(const EObjectType objectType, const glm::vec2& position
 {
 }
 
+void IGameObject::SetOwner(IGameObject* pOwner)
+{
+	pOwner_ = pOwner;
+}
+
+IGameObject* IGameObject::GetOwner() const
+{
+	return pOwner_;
+}
+
 IGameObject::~IGameObject()
 {
 }
@@ -18,6 +30,11 @@ IGameObject::~IGameObject()
 glm::vec2& IGameObject::GetCurrentPosition()
 {
 	return position_;
+}
+
+glm::vec2& IGameObject::GetTargetPosition()
+{
+	return targetPosition_;
 }
 
 glm::vec2& IGameObject::GetCurrentDirection()

@@ -67,9 +67,14 @@ namespace Physics {
 		static std::unordered_set<std::shared_ptr<IGameObject>> dynamicObjects_;
 		static std::shared_ptr<Level> pCurrentLevel_;
 
-		static bool HasIntersection(const Collider& collider1, const glm::vec2& position1,
-									const Collider& collider2, const glm::vec2& position2);
+		static bool HasColliderIntersection(const Collider& collider1, const glm::vec2& position1,
+											const Collider& collider2, const glm::vec2& position2);
 
+		static bool HasPositionIntersection(const std::shared_ptr<IGameObject>& pObject1, const glm::vec2& position1, 
+											const std::shared_ptr<IGameObject>& pObject2, const glm::vec2& position2);
+
+		static void CalculateTargetPositions(std::unordered_set<std::shared_ptr<IGameObject>>& dynamicObjects, const double delta);
+		static void UpdatePositions(std::unordered_set<std::shared_ptr<IGameObject>>& dynamicObjects);
 	};
 
 }

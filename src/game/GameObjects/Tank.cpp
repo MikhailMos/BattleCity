@@ -62,6 +62,8 @@ Tank::Tank(const Tank::ETankType eType, const bool bHasAI, const bool bShieldOnS
 	respawnTimer_.Start(1500);
 
 	colliders_.emplace_back(glm::vec2(0), size_);
+	
+	pCurrentBullet_->SetOwner(this);
 	Physics::PhysicsEngine::AddDynamicGameObject(pCurrentBullet_);
 
 	if (bHasAI)

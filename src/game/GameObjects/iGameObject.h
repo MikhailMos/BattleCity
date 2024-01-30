@@ -22,10 +22,13 @@ public:
 	};
 
 	IGameObject(const EObjectType objectType, const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer);
+	void SetOwner(IGameObject* pOwner);
+	IGameObject* GetOwner() const;
 	virtual void Render() const = 0;
 	virtual void Update(const double delta) {};
 	virtual ~IGameObject();
 	virtual glm::vec2& GetCurrentPosition();
+	virtual glm::vec2& GetTargetPosition();
 	virtual glm::vec2& GetCurrentDirection();
 	virtual double GetCurrentVelocity();
 	virtual void SetVelocity(const double velocity);
@@ -37,7 +40,9 @@ public:
 	virtual void OnCollision() {}
 
 protected:
+	IGameObject* pOwner_;
 	glm::vec2 position_;	// текущая позиция танка
+	glm::vec2 targetPosition_; // позиция в следующем кадре
 	glm::vec2 size_;		// размер объекта
 	float rotation_;		
 	float layer_;			// глубина слоя
